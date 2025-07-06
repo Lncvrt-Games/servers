@@ -1,0 +1,73 @@
+<?php
+$requester = $_SERVER['HTTP_REQUESTER'] ?? '';
+
+function setPlainHeader() {
+    header("Content-Type: text/plain");
+}
+
+function setJsonHeader() {
+    header("Content-Type: application/json");
+}
+
+function getIPAddress() {
+    return $_SERVER['HTTP_CF_CONNECTING_IP'];
+}
+
+function newConnection() {
+    include __DIR__.'/../config/connection.php';
+    try {
+        $conn = new mysqli($db_host, $db_user, $db_pass, $db_name, $db_port);
+    } catch (mysqli_sql_exception $e) {
+        exitWithMessage("-999");
+    }
+    return $conn;
+}
+
+function encrypt($plainText) {
+    include __DIR__.'/../config/encryption.php';
+    $iv = random_bytes(16);
+    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $SERVER_SEND_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    return base64_encode($iv . $cipher);
+}
+
+function decrypt($dataB64) {
+    include __DIR__.'/../config/encryption.php';
+    $data = base64_decode($dataB64);
+    $iv = substr($data, 0, 16);
+    $cipher = substr($data, 16);
+    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $SERVER_RECEIVE_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    if ($decrypted === false) {
+        exit(encrypt('-997'));
+    }
+    return $decrypted;
+}
+
+function exitWithMessage($message, $encrypt = true) {
+    if ($encrypt === true) {
+        echo encrypt($message);
+    } else {
+        echo $message;
+    }
+    exit;
+}
+
+function checkClientDatabaseVersion() {
+    global $allowedDatabaseVersions;
+    if (!isset($allowedDatabaseVersions)) require __DIR__ . '/../config/general.php';
+    if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998");
+    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") return;
+    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions) || $_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998");
+}
+
+function getPostData() {
+    $raw = file_get_contents("php://input");
+    parse_str($raw, $postData);
+
+    $decrypted = [];
+    foreach ($postData as $k => $v) {
+        $decKey = decrypt($k);
+        $decValue = decrypt($v);
+        $decrypted[$decKey] = $decValue;
+    }
+    return $decrypted;
+}
