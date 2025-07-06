@@ -21,7 +21,7 @@ if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{8,}$/', $pass
     exitWithMessage(json_encode(["success" => false, "message" => "Password must be at least 8 characters with at least one letter and one number"]));
 }
 
-$stmt = $conn->prepare("SELECT uid FROM users WHERE username = ? OR email = ?");
+$stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
 $stmt->bind_param("ss", $username, $email);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -35,7 +35,7 @@ $token = bin2hex(random_bytes(256));
 $ip = getIPAddress();
 $time = time();
 
-$stmt = $conn->prepare("INSERT INTO users (game_session_token, username, password, email, register_time, latest_ip) VALUES (?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO users (token, username, password, email, register_time, latest_ip) VALUES (?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("ssssis", $token, $username, $hashed, $email, $time, $ip);
 $stmt->execute();
 

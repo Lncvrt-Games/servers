@@ -25,19 +25,17 @@ if (!password_verify($password, $user["password"])) {
     exitWithMessage(json_encode(["success" => false, "message" => "Invalid username or password"]));
 }
 
-$uid = $user['uid'];
-$token = $user['game_session_token'];
-if (!$token || strlen(trim($token)) !== 512) $token = bin2hex(random_bytes(256));
-
+$id = $user['id'];
+$token = $user['token'];
 $ip = getIPAddress();
 
-$stmt = $conn->prepare("UPDATE users SET latest_ip = ?, game_session_token = ? WHERE uid = ?");
-$stmt->bind_param("ssi", $ip, $token, $uid);
+$stmt = $conn->prepare("UPDATE users SET latest_ip = ?, token = ? WHERE id = ?");
+$stmt->bind_param("ssi", $ip, $token, $id);
 $stmt->execute();
 
 if ($currentHighScore > $user['highScore']) {
-    $stmt = $conn->prepare("UPDATE users SET highScore = ? WHERE uid = ?");
-    $stmt->bind_param("ii", $currentHighScore, $uid);
+    $stmt = $conn->prepare("UPDATE users SET highScore = ? WHERE id = ?");
+    $stmt->bind_param("ii", $currentHighScore, $id);
     $stmt->execute();
     $user['highScore'] = $currentHighScore;
 }
@@ -47,7 +45,7 @@ $data = ["session" => $token];
 if ($loginType === "0") {
     $data += [
         "username" => $user['username'],
-        "userid" => $uid,
+        "id" => $id,
         "highscore" => (string)$user['highScore'],
         "icon" => (int)$user['icon'],
         "overlay" => (int)$user['overlay'],
@@ -63,7 +61,7 @@ if ($loginType === "0") {
 } elseif ($loginType === "1") {
     $data += [
         "username" => $user['username'],
-        "userid" => $uid
+        "id" => $id
     ];
 }
 
