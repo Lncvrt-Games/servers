@@ -4,11 +4,11 @@ setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
-$postData = getPostData();
-$username = $postData['username'];
-$password = $postData['password'];
-$currentHighScore = $postData['currentHighScore'] ?? 0;
-$loginType = $postData['loginType'] ?? '0';
+$post = getPostData();
+$username = $post['username'];
+$password = $post['password'];
+$currentHighScore = $post['currentHighScore'] ?? 0;
+$loginType = $post['loginType'] ?? '0';
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
