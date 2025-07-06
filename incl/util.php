@@ -1,6 +1,4 @@
 <?php
-$requester = $_SERVER['HTTP_REQUESTER'] ?? '';
-
 function setPlainHeader() {
     header("Content-Type: text/plain");
 }
@@ -51,12 +49,30 @@ function exitWithMessage($message, $encrypt = true) {
     exit;
 }
 
+function isSupportedVersion($version) {
+    global $latestVersion;
+    if (!isset($latestVersion)) require __DIR__ . '/../config/general.php';
+    return $version === $latestVersion || $version === $latestBetaVersion;
+}
+
+function isAllowedVersion($version) {
+    global $allowedVersions;
+    if (!isset($allowedVersions)) require __DIR__ . '/../config/general.php';
+    return in_array($version, $allowedVersions);
+}
+
+function isAllowedDatabaseVersion($version) {
+    global $allowedDatabaseVersions;
+    if (!isset($allowedDatabaseVersions)) require __DIR__ . '/../config/general.php';
+    return in_array($version, $allowedDatabaseVersions);
+}
+
 function checkClientDatabaseVersion() {
     global $allowedDatabaseVersions;
     if (!isset($allowedDatabaseVersions)) require __DIR__ . '/../config/general.php';
     if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998");
-    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") return;
-    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions) || $_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998");
+    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998");
+    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions)) exitWithMessage("-998");
 }
 
 function getPostData() {
