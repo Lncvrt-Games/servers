@@ -4,13 +4,14 @@ setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
-$postData = getPostData();
+$post = getPostData();
+$oldusername = $post['oldusername'] ?? '';
 $newusername = $post['newusername'] ?? '';
 $token = $post['token'] ?? '';
 $username = $post['username'] ?? '';
 
 if (!preg_match('/^[a-zA-Z0-9]{3,16}$/', $newusername)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Username must be 3-16 characters, letters and numbers only"]));
+    exitWithMessage(json_encode(["success" => false, "message" => "New username must be 3-16 characters, letters and numbers only"]));
 }
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
@@ -19,7 +20,16 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+    exitWithMessage(json_encode(["success" => false, "message" => "New username already exists"]));
+}
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE username = ? AND token = ?");
+$stmt->bind_param("ss", $oldusername, $token);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows === 0) {
+    exitWithMessage(json_encode(["success" => false, "message" => "Invalid old username"]));
 }
 
 $stmt = $conn->prepare("UPDATE users SET username = ? WHERE username = ? AND token = ?");
