@@ -7,8 +7,10 @@ $clientVersion = $_SERVER['HTTP_CLIENTVERSION'] ?? "0";
 if (($_SERVER['HTTP_REQUESTER'] ?? "0") != "BerryDashClient") {
     exitWithMessage("-1", false);
 }
-if (isSupportedVersion($clientVersion)) {
+if (isLatestVersion($clientVersion)) {
     echo "1";
+} else if (isBetaVersion($clientVersion)) {
+    echo "4";
 } else if (isAllowedVersion($clientVersion)) {
     echo "3";
 } else if (isAllowedVersion($clientVersion) && isAllowedDatabaseVersion($clientVersion)) {

@@ -49,10 +49,16 @@ function exitWithMessage($message, $encrypt = true) {
     exit;
 }
 
-function isSupportedVersion($version) {
+function isLatestVersion($version) {
     global $latestVersion;
     if (!isset($latestVersion)) require __DIR__ . '/../config/general.php';
-    return $version === $latestVersion || $version === $latestBetaVersion;
+    return $version === $latestVersion;
+}
+
+function isBetaVersion($version) {
+    global $latestBetaVersion;
+    if (!isset($latestBetaVersion)) require __DIR__ . '/../config/general.php';
+    return $version === $latestBetaVersion;
 }
 
 function isAllowedVersion($version) {
