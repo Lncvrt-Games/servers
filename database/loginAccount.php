@@ -45,7 +45,7 @@ $data = ["session" => $token];
 if ($loginType === "0") {
     $data += [
         "username" => $user['username'],
-        "id" => $id,
+        "userid" => $id,
         "highscore" => (string)$user['highScore'],
         "icon" => (int)$user['icon'],
         "overlay" => (int)$user['overlay'],
