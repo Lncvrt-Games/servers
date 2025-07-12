@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../incl/util.php';
-header("Content-Type: application/json");
+setJsonHeader();
 $conn = newConnection();
 
 $stmt = $conn->prepare("SELECT username, highScore FROM users WHERE highScore != 0 AND banned = 0 AND leaderboardsBanned = 0 ORDER BY highScore DESC LIMIT 500");

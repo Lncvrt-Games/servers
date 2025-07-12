@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../incl/util.php';
-header("Content-Type: application/json");
+setJsonHeader();
 $conn = newConnection();
 
 $stmt = $conn->prepare("
