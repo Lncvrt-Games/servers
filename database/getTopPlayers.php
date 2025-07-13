@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../incl/util.php';
-setPlainHeader();
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
