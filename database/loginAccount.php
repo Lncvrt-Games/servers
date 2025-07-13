@@ -40,12 +40,10 @@ if ($currentHighScore > $user['highScore']) {
     $user['highScore'] = $currentHighScore;
 }
 
-$data = ["session" => $token];
+$data = ["session" => $tokenm, "username" => $user['username'], "userid" => $id];
 
 if ($loginType === "0") {
     $data += [
-        "username" => $user['username'],
-        "userid" => $id,
         "highscore" => (string)$user['highScore'],
         "icon" => (int)$user['icon'],
         "overlay" => (int)$user['overlay'],
@@ -57,11 +55,6 @@ if ($loginType === "0") {
         "totalAttempts" => (string)$user['totalAttempts'],
         "birdColor" => json_encode((string)$user['birdColor']),
         "overlayColor" => json_encode((string)$user['overlayColor'])
-    ];
-} elseif ($loginType === "1") {
-    $data += [
-        "username" => $user['username'],
-        "id" => $id
     ];
 }
 
