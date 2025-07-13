@@ -5,7 +5,8 @@ checkClientDatabaseVersion();
 
 $post = getPostData();
 $request_content = $post['content'] ?? '';
-$token = $post['token'] ??  null;
+$token = $post['token'] ?? '';
+$username = $post['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $request_content)) {
     exitWithMessage(json_encode(["success" => false, "message" => "Invalid content recieved"]));
@@ -13,8 +14,8 @@ if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~
 
 $conn = newConnection();
 
-$stmt = $conn->prepare("SELECT * FROM users WHERE token = ?");
-$stmt->bind_param("s", $token);
+$stmt = $conn->prepare("SELECT * FROM users WHERE token = ? AND username = ?");
+$stmt->bind_param("ss", $token, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
