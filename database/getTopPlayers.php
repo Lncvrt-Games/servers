@@ -22,11 +22,11 @@ if ($request_type === "0") {
     exitWithMessage(json_encode([]));
 }
 
-$stmt = $conn->prepare("SELECT username, `$request_value`, icon, overlay, id, birdR, birdG, birdB, overlayR, overlayG, overlayB FROM users WHERE `$request_value` != 0 AND banned = 0 AND leaderboardsBanned = 0 ORDER BY `$request_value` DESC LIMIT 500");
+$stmt = $conn->prepare("SELECT username, `$request_value`, icon, overlay, id, birdColor, overlayColor FROM users WHERE `$request_value` != 0 AND banned = 0 AND leaderboardsBanned = 0 ORDER BY `$request_value` DESC LIMIT 500");
 $stmt->execute();
 
 $result = $stmt->get_result();
 
-echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'value' => $row[$request_value], 'icon' => $row['icon'], 'overlay' => $row['overlay'], 'birdColor' => [$row['birdR'], $row['birdG'], $row['birdB']], 'overlayColor' => [$row['overlayR'], $row['overlayG'], $row['overlayB']]], $result->fetch_all(MYSQLI_ASSOC)), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'value' => $row[$request_value], 'icon' => $row['icon'], 'overlay' => $row['overlay'], 'birdColor' => json_decode($row['birdColor']), 'overlayColor' => json_decode($row['overlayColor'])], $result->fetch_all(MYSQLI_ASSOC)), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
 $conn->close();

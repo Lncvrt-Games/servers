@@ -55,8 +55,8 @@ if ($loginType === "0") {
         "totalUltraBerries" => (string)$user['totalUltraBerries'],
         "totalSpeedyBerries" => (string)$user['totalSpeedyBerries'],
         "totalAttempts" => (string)$user['totalAttempts'],
-        "birdColor" => [(int)$user['birdR'], (int)$user['birdG'], (int)$user['birdB']],
-        "overlayColor" => [(int)$user['overlayR'], (int)$user['overlayG'], (int)$user['overlayB']]
+        "birdColor" => json_encode((string)$user['birdColor']),
+        "overlayColor" => json_encode((string)$user['overlayColor'])
     ];
 } elseif ($loginType === "1") {
     $data += [
