@@ -14,6 +14,6 @@ $stmt = $conn->prepare("
 $stmt->execute();
 $result = $stmt->get_result();
 
-echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['user_id'], 'content' => $row['content'], 'id' => $row['chat_id'], 'icon' => $row['icon'], 'overlay' => $row['overlay'], 'birdColor' => json_decode($row['birdColor']), 'overlayColor' => json_decode($row['overlayColor'])], $result->fetch_all(MYSQLI_ASSOC)), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['user_id'], 'content' => $row['content'], 'id' => $row['chat_id'], 'icon' => $row['icon'], 'overlay' => $row['overlay'], 'birdColor' => json_decode($row['birdColor']), 'overlayColor' => json_decode($row['overlayColor'])], $result->fetch_all(MYSQLI_ASSOC))));
 
 $conn->close();
