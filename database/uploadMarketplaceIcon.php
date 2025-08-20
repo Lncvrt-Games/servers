@@ -1,0 +1,60 @@
+<?php
+require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../../../vendor/autoload.php';
+setJsonHeader();
+checkClientDatabaseVersion();
+
+use Ramsey\Uuid\Uuid;
+
+$post = getPostData();
+$token = $post['token'] ?? '';
+$username = $post['username'] ?? '';
+$price = (int)$post['price'] ?? 0;
+$name = $post['name'] ?? '';
+$name = base64_encode($name);
+$filecontent = $post['filecontent'] ?? '';
+
+if (!$filecontent) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]));
+$decoded = base64_decode($filecontent, true);
+if (!$decoded) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]));
+if (strlen($decoded) > 1024 * 1024) exitWithMessage(json_encode(["success" => false, "message" => "File size exceeds 1 MB limit"]));
+$info = getimagesizefromstring($decoded);
+if (!$info) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]));
+if ($info[2] !== IMAGETYPE_PNG) exitWithMessage(json_encode(["success" => false, "message" => "Image must be a PNG"]));
+if ($info[0] !== 128 || $info[1] !== 128) exitWithMessage(json_encode(["success" => false, "message" => "Invalid has to be 128x128"]));
+
+$conn = newConnection();
+
+$stmt = $conn->prepare("SELECT * FROM users WHERE token = ? AND username = ?");
+$stmt->bind_param("ss", $token, $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+if (!$row) exitWithMessage(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+$stmt->close();
+
+$id = $row["id"];
+$time = time();
+$hash = hash('sha512', base64_decode($filecontent));
+
+$stmt = $conn->prepare("SELECT id FROM marketplaceicons WHERE hash = ?");
+$stmt->bind_param("s", $hash);
+$stmt->execute();
+$result = $stmt->get_result();
+if ($result->fetch_assoc()) {
+    $stmt->close();
+    exitWithMessage(json_encode(["success" => false, "message" => "This icon already exists in the marketplace"]));
+}
+$stmt->close();
+
+$uuid = Uuid::uuid4()->toString();
+
+$stmt = $conn->prepare("INSERT INTO marketplaceicons (uuid, userId, data, hash, price, name, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("sissisi", $uuid, $id, $filecontent, $hash, $price, $name, $time);
+$stmt->execute();
+$insertId = $conn->insert_id;
+$stmt->close();
+
+echo encrypt(json_encode(["success" => true]));
+
+$conn->close();
