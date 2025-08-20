@@ -26,9 +26,11 @@ if ($result->num_rows > 0) {
         "totalSlowBerries" => (string)$row['totalSlowBerries'],
         "totalUltraBerries" => (string)$row['totalUltraBerries'],
         "totalSpeedyBerries" => (string)$row['totalSpeedyBerries'],
+        "totalCoinBerries" => (string)$row['totalCoinBerries'],
         "totalAttempts" => (string)$row['totalAttempts'],
         "birdColor" => json_decode((string)$row['birdColor']),
-        "overlayColor" => json_decode((string)$row['overlayColor'])
+        "overlayColor" => json_decode((string)$row['overlayColor']),
+        "marketplaceData" => json_decode((string)$row['marketplaceData'])
     ]));
 } else {
     echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));

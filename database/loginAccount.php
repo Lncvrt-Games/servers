@@ -52,9 +52,11 @@ if ($loginType === "0") {
         "totalSlowBerries" => (string)$user['totalSlowBerries'],
         "totalUltraBerries" => (string)$user['totalUltraBerries'],
         "totalSpeedyBerries" => (string)$user['totalSpeedyBerries'],
+        "totalCoinBerries" => (string)$user['totalCoinBerries'],
         "totalAttempts" => (string)$user['totalAttempts'],
         "birdColor" => json_decode((string)$user['birdColor']),
-        "overlayColor" => json_decode((string)$user['overlayColor'])
+        "overlayColor" => json_decode((string)$user['overlayColor']),
+        "marketplaceData" => json_decode((string)$user['marketplaceData'])
     ];
 }
 

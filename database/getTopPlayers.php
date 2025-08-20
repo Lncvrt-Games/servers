@@ -19,6 +19,7 @@ if ($request_type === "0") {
         2 => "totalSlowBerries",
         3 => "totalUltraBerries",
         4 => "totalSpeedyBerries",
+        5 => "totalCoinBerries",
         default => "totalNormalBerries"
     };
 } else {

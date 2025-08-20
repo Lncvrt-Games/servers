@@ -18,9 +18,11 @@ $totalPoisonBerries = (string)$post['totalPoisonBerries'] ?? '0';
 $totalSlowBerries = (string)$post['totalSlowBerries'] ?? '0';
 $totalUltraBerries = (string)$post['totalUltraBerries'] ?? '0';
 $totalSpeedyBerries = (string)$post['totalSpeedyBerries'] ?? '0';
+$totalCoinBerries = (string)$post['totalCoinBerries'] ?? '0';
 $totalAttempts = (string)$post['totalAttempts'] ?? '0';
 $birdColor = (string)$post['birdColor'] ?? '[255,255,255]';
 $overlayColor = (string)$post['overlayColor'] ?? '[255,255,255]';
+$marketplaceData = (string)$post['marketplaceData'] ?? '[]';
 
 $conn = newConnection();
 
@@ -30,7 +32,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $updateStmt = $conn->prepare("UPDATE users SET highScore = ?, icon = ?, overlay = ?, totalNormalBerries = ?, totalPoisonBerries = ?, totalSlowBerries = ?, totalUltraBerries = ?, totalSpeedyBerries = ?, totalAttempts = ?, birdColor = ?, overlayColor = ? WHERE token = ? AND username = ?");
+    $updateStmt = $conn->prepare("UPDATE users SET highScore = ?, icon = ?, overlay = ?, totalNormalBerries = ?, totalPoisonBerries = ?, totalSlowBerries = ?, totalUltraBerries = ?, totalSpeedyBerries = ?, totalCoinBerries = ?, totalAttempts = ?, birdColor = ?, overlayColor = ?, marketplaceData = ? WHERE token = ? AND username = ?");
     $updateStmt->bind_param("iiiiiiiiissss", 
         $highScore, 
         $icon, 
@@ -40,9 +42,11 @@ if ($result->num_rows > 0) {
         $totalSlowBerries, 
         $totalUltraBerries, 
         $totalSpeedyBerries, 
+        $totalCoinBerries, 
         $totalAttempts, 
         $birdColor, 
         $overlayColor, 
+        $marketplaceData, 
         $token, 
         $username
     );
