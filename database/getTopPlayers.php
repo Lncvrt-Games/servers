@@ -1,11 +1,14 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 setJsonHeader();
-checkClientDatabaseVersion();
+if ($_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
+    $request_type = '0';
+} else {
+    checkClientDatabaseVersion();
+    $post = getPostData();
+    $request_type = $post['type'] ?? '';
+}
 $conn = newConnection();
-
-$post = getPostData();
-$request_type = $post['type'] ?? '';
 
 $request_value = "";
 if ($request_type === "0") {
