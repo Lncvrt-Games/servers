@@ -4,6 +4,10 @@ This is the new rewritten server source code for Berry Dash.
 
 ## Setup
 
+> [!CAUTION]
+> Do not share any keys with anybody, and store them safely on your computer.
+> Encryption keys are meant to increase the security of the game and prevent cheaters.
+
 1. Upload the files on a webserver
 2. Import database.sql into a MySQL/MariaDB database
 3. Configure everything in `config/` folder (use `python3 genkeys.py` for `encryption.php`)
