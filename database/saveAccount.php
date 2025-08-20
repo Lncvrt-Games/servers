@@ -2,10 +2,6 @@
 require __DIR__ . '/../incl/util.php';
 setJsonHeader();
 checkClientDatabaseVersion();
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 
 $post = getPostData();
 $token = $post['token'] ?? '';
@@ -33,7 +29,7 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $updateStmt = $conn->prepare("UPDATE users SET highScore = ?, icon = ?, overlay = ?, totalNormalBerries = ?, totalPoisonBerries = ?, totalSlowBerries = ?, totalUltraBerries = ?, totalSpeedyBerries = ?, totalCoinBerries = ?, totalAttempts = ?, birdColor = ?, overlayColor = ?, marketplaceData = ? WHERE token = ? AND username = ?");
-    $updateStmt->bind_param("iiiiiiiiissss", 
+    $updateStmt->bind_param("iiiiiiiiiisssss", 
         $highScore, 
         $icon, 
         $overlay, 
