@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../incl/util.php';
-setJsonHeader();
+setPlainHeader();
 if ($_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
     $request_type = '0';
 } else {

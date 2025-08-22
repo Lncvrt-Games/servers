@@ -1,7 +1,7 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 require __DIR__ . '/../../../../vendor/autoload.php';
-setJsonHeader();
+setPlainHeader();
 checkClientDatabaseVersion();
 
 use Ramsey\Uuid\Uuid;
