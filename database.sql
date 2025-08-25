@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 25, 2025 at 06:58 AM
+-- Generation Time: Aug 25, 2025 at 07:02 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -78,7 +78,7 @@ CREATE TABLE `marketplaceicons` (
   `data` text NOT NULL,
   `hash` text NOT NULL,
   `timestamp` bigint(20) NOT NULL,
-  `state` tinyint(1) NOT NULL DEFAULT 1,
+  `state` tinyint(1) NOT NULL DEFAULT 0,
   `price` int(11) NOT NULL DEFAULT 0,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
