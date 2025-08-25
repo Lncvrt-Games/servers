@@ -7,7 +7,7 @@ $stmt = $conn->prepare("
     SELECT c.id, c.content, u.username 
     FROM chats c 
     JOIN users u ON c.userId = u.id 
-    WHERE u.banned = 0 AND c.deleted = 0 
+    WHERE u.banned = 0 AND c.deleted_at = 0 
     ORDER BY c.id ASC LIMIT 50
 ");
 $stmt->execute();
