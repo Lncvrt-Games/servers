@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 25, 2025 at 02:54 AM
+-- Generation Time: Aug 25, 2025 at 06:58 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `berrydashdatabase`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `chatroom_reports`
+--
+
+CREATE TABLE `chatroom_reports` (
+  `id` int(11) NOT NULL,
+  `chatId` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `reason` text NOT NULL,
+  `timestamp` bigint(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 -- --------------------------------------------------------
 
@@ -105,6 +119,14 @@ CREATE TABLE `users` (
 --
 
 --
+-- Indexes for table `chatroom_reports`
+--
+ALTER TABLE `chatroom_reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `userId` (`userId`),
+  ADD KEY `chatId` (`chatId`);
+
+--
 -- Indexes for table `chats`
 --
 ALTER TABLE `chats`
@@ -135,6 +157,12 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `chatroom_reports`
+--
+ALTER TABLE `chatroom_reports`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `chats`
 --
 ALTER TABLE `chats`
@@ -161,6 +189,13 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `chatroom_reports`
+--
+ALTER TABLE `chatroom_reports`
+  ADD CONSTRAINT `chatId` FOREIGN KEY (`chatId`) REFERENCES `chats` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `chats`
