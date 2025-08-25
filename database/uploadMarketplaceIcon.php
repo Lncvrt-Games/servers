@@ -1,10 +1,7 @@
 <?php
 require __DIR__ . '/../incl/util.php';
-require __DIR__ . '/../../../../vendor/autoload.php';
 setPlainHeader();
 checkClientDatabaseVersion();
-
-use Ramsey\Uuid\Uuid;
 
 $post = getPostData();
 $token = $post['token'] ?? '';
@@ -47,7 +44,7 @@ if ($result->fetch_assoc()) {
 }
 $stmt->close();
 
-$uuid = Uuid::uuid4()->toString();
+$uuid = uuidv4();
 
 $stmt = $conn->prepare("INSERT INTO marketplaceicons (uuid, userId, data, hash, price, name, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)");
 $stmt->bind_param("sissisi", $uuid, $id, $filecontent, $hash, $price, $name, $time);
@@ -55,6 +52,6 @@ $stmt->execute();
 $insertId = $conn->insert_id;
 $stmt->close();
 
-echo encrypt(json_encode(["success" => true]));
+echo encrypt(json_encode(["success" => true, "message" => "Icon uploaded successfully! It will be reviewed and accepted or denied soon"]));
 
 $conn->close();
