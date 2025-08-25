@@ -26,11 +26,36 @@ if ($request_type === "0") {
     exitWithMessage(json_encode([]));
 }
 
-$stmt = $conn->prepare("SELECT username, `$request_value`, icon, overlay, id, birdColor, overlayColor FROM users WHERE `$request_value` != 0 AND banned = 0 AND leaderboardsBanned = 0 ORDER BY `$request_value` DESC LIMIT 500");
+$stmt = $conn->prepare("SELECT username, id, save_data 
+  FROM users 
+  WHERE banned = 0 AND leaderboardsBanned = 0");
 $stmt->execute();
 
 $result = $stmt->get_result();
+$rows = $result->fetch_all(MYSQLI_ASSOC);
 
-echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'value' => $row[$request_value], 'icon' => $row['icon'], 'overlay' => $row['overlay'], 'birdColor' => json_decode($row['birdColor']), 'overlayColor' => json_decode($row['overlayColor'])], $result->fetch_all(MYSQLI_ASSOC))));
+$mapped = [];
+foreach ($rows as $row) {
+    $savedata = json_decode($row['save_data'], true);
+    if (!$savedata) continue;
+
+    $value = $savedata['gameStore'][$request_value] ?? 0;
+    if ($value <= 0) continue;
+
+    $mapped[] = [
+        'username' => $row['username'],
+        'userid' => $row['id'],
+        'value' => $value,
+        'icon' => $savedata['bird']['icon'] ?? 1,
+        'overlay' => $savedata['bird']['overlay'] ?? 0,
+        'birdColor' => $savedata['settings']['colors']['icon'] ?? [255,255,255],
+        'overlayColor' => $savedata['settings']['colors']['overlay'] ?? [255,255,255],
+    ];
+}
+
+usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
+$limited = array_slice($mapped, 0, 500);
+
+echo encrypt(json_encode($limited));
 
 $conn->close();
