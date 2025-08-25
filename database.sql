@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 20, 2025 at 11:20 PM
+-- Generation Time: Aug 25, 2025 at 02:54 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -32,7 +32,7 @@ CREATE TABLE `chats` (
   `userId` int(11) NOT NULL,
   `content` text NOT NULL,
   `timestamp` bigint(20) NOT NULL,
-  `deleted` tinyint(1) NOT NULL DEFAULT 0
+  `deleted_at` bigint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 -- --------------------------------------------------------
