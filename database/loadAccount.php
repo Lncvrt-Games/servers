@@ -16,21 +16,13 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
+    $savedata = json_decode($row['save_data'], true);
+    $savedata['account']['id'] = $row['id'];
+    $savedata['account']['name'] = $row['username'];
+    $savedata['account']['session'] = $row['token'];
     echo encrypt(json_encode([
         "success" => true,
-        "highscore" => (string)$row['highScore'],
-        "icon" => (int)$row['icon'],
-        "overlay" => (int)$row['overlay'],
-        "totalNormalBerries" => (string)$row['totalNormalBerries'],
-        "totalPoisonBerries" => (string)$row['totalPoisonBerries'],
-        "totalSlowBerries" => (string)$row['totalSlowBerries'],
-        "totalUltraBerries" => (string)$row['totalUltraBerries'],
-        "totalSpeedyBerries" => (string)$row['totalSpeedyBerries'],
-        "totalCoinBerries" => (string)$row['totalCoinBerries'],
-        "totalAttempts" => (string)$row['totalAttempts'],
-        "birdColor" => json_decode((string)$row['birdColor']),
-        "overlayColor" => json_decode((string)$row['overlayColor']),
-        "marketplaceData" => json_decode((string)$row['marketplaceData'])
+        "data" => $savedata
     ]));
 } else {
     echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
