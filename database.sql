@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 25, 2025 at 07:02 AM
+-- Generation Time: Aug 26, 2025 at 06:09 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -97,21 +97,9 @@ CREATE TABLE `users` (
   `token` varchar(512) NOT NULL,
   `latest_ip` varchar(255) DEFAULT NULL,
   `register_time` int(11) DEFAULT NULL,
-  `highScore` bigint(20) NOT NULL DEFAULT 0,
-  `totalNormalBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalPoisonBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalSlowBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalUltraBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalSpeedyBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalCoinBerries` bigint(20) NOT NULL DEFAULT 0,
-  `totalAttempts` bigint(20) NOT NULL DEFAULT 0,
-  `icon` int(11) NOT NULL DEFAULT 1,
-  `overlay` int(11) NOT NULL DEFAULT 0,
   `banned` tinyint(1) NOT NULL DEFAULT 0,
   `leaderboardsBanned` tinyint(1) NOT NULL DEFAULT 0,
-  `birdColor` text NOT NULL DEFAULT '[255,255,255]',
-  `overlayColor` text NOT NULL DEFAULT '[255,255,255]',
-  `marketplaceData` text NOT NULL DEFAULT '{}'
+  `save_data` text NOT NULL DEFAULT '{}'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 --
