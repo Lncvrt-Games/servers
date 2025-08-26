@@ -7,7 +7,6 @@ $conn = newConnection();
 $post = getPostData();
 $username = $post['username'];
 $password = $post['password'];
-$currentHighScore = $post['currentHighScore'] ?? 0;
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
 $stmt->bind_param("s", $username);
@@ -31,13 +30,6 @@ $ip = getIPAddress();
 $stmt = $conn->prepare("UPDATE users SET latest_ip = ?, token = ? WHERE id = ?");
 $stmt->bind_param("ssi", $ip, $token, $id);
 $stmt->execute();
-
-if ($currentHighScore > $user['highScore']) {
-    $stmt = $conn->prepare("UPDATE users SET highScore = ? WHERE id = ?");
-    $stmt->bind_param("ii", $currentHighScore, $id);
-    $stmt->execute();
-    $user['highScore'] = $currentHighScore;
-}
 
 $data = ["session" => $token, "username" => $user['username'], "userid" => $id];
 
