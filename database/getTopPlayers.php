@@ -72,6 +72,11 @@ foreach ($rows as $row) {
 usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
-echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
+$clientVersion = $_SERVER['HTTP_CLIENTVERSION'] ?? "0";
+if ($clientVersion == "1.6.1" && $request_type == "1") {
+    echo encrypt(json_encode($limited));
+} else {
+    echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
+}
 
 $conn->close();
