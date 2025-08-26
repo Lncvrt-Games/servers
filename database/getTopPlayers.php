@@ -35,12 +35,27 @@ $result = $stmt->get_result();
 $rows = $result->fetch_all(MYSQLI_ASSOC);
 
 $mapped = [];
+$icons = [];
 foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
     if (!$savedata) continue;
 
     $value = $savedata['gameStore'][$request_value] ?? 0;
     if ($value <= 0) continue;
+
+    $customIcon = $savedata['bird']['customIcon']['selected'] ?? null;
+
+    if ($customIcon != null && strlen($customIcon) == 36 && $icons[$customIcon] == null) {
+        $stmt = $conn->prepare("SELECT data FROM marketplaceicons WHERE uuid = ?");
+        $stmt->bind_param("s", $customIcon);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $rowData = $result->fetch_assoc();
+        if ($rowData) {
+            $stmt->close();
+            $icons[$customIcon] = $rowData["data"];
+        }
+    }
 
     $mapped[] = [
         'username' => $row['username'],
@@ -50,12 +65,13 @@ foreach ($rows as $row) {
         'overlay' => $savedata['bird']['overlay'] ?? 0,
         'birdColor' => $savedata['settings']['colors']['icon'] ?? [255,255,255],
         'overlayColor' => $savedata['settings']['colors']['overlay'] ?? [255,255,255],
+        'customIcon' => $customIcon
     ];
 }
 
 usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
-echo encrypt(json_encode($limited));
+echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
 
 $conn->close();
