@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 26, 2025 at 06:09 AM
+-- Generation Time: Aug 27, 2025 at 10:03 AM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -31,7 +31,7 @@ CREATE TABLE `chatroom_reports` (
   `id` int(11) NOT NULL,
   `chatId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `reason` text NOT NULL,
+  `reason` longtext NOT NULL,
   `timestamp` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
@@ -44,7 +44,7 @@ CREATE TABLE `chatroom_reports` (
 CREATE TABLE `chats` (
   `id` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
-  `content` text NOT NULL,
+  `content` longtext NOT NULL,
   `timestamp` bigint(20) NOT NULL,
   `deleted_at` bigint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
@@ -75,8 +75,8 @@ CREATE TABLE `marketplaceicons` (
   `id` int(11) NOT NULL,
   `uuid` text DEFAULT NULL,
   `userId` int(11) NOT NULL,
-  `data` text NOT NULL,
-  `hash` text NOT NULL,
+  `data` longtext NOT NULL,
+  `hash` varchar(128) NOT NULL,
   `timestamp` bigint(20) NOT NULL,
   `state` tinyint(1) NOT NULL DEFAULT 0,
   `price` int(11) NOT NULL DEFAULT 0,
@@ -99,7 +99,7 @@ CREATE TABLE `users` (
   `register_time` int(11) DEFAULT NULL,
   `banned` tinyint(1) NOT NULL DEFAULT 0,
   `leaderboardsBanned` tinyint(1) NOT NULL DEFAULT 0,
-  `save_data` text NOT NULL DEFAULT '{}'
+  `save_data` longtext NOT NULL DEFAULT '\'{}\''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 --
