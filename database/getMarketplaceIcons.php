@@ -5,15 +5,15 @@ checkClientDatabaseVersion();
 $conn = newConnection();
 
 $stmt = $conn->prepare("
-    SELECT c.data, u.username, u.id, c.price, c.name, c.uuid 
+    SELECT c.data, u.username, u.id, c.price, c.name, c.uuid, c.state 
     FROM marketplaceicons c 
     JOIN users u ON c.userId = u.id 
-    WHERE u.banned = 0 AND c.state = 1 
+    WHERE u.banned = 0 AND c.state = 1 OR c.state = 2 
     ORDER BY c.id ASC
 ");
 $stmt->execute();
 $result = $stmt->get_result();
 
-echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'data' => $row['data'], 'uuid' => $row['uuid'], 'price' => $row['price'], 'name' => base64_decode($row['name'])], $result->fetch_all(MYSQLI_ASSOC))));
+echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'data' => $row['data'], 'uuid' => $row['uuid'], 'price' => (int)$row['state'] == 2 ? 100000000 : $row['price'], 'name' => base64_decode($row['name'])], $result->fetch_all(MYSQLI_ASSOC))));
 
 $conn->close();
