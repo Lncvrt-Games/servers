@@ -11,6 +11,7 @@ $name = $post['name'] ?? '';
 $name = base64_encode($name);
 $filecontent = $post['filecontent'] ?? '';
 
+if ($price < 10) exitWithMessage(json_encode(["success" => false, "message" => "Price cannot be be under 10 coins"]));
 if (!$filecontent) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]));
 $decoded = base64_decode($filecontent, true);
 if (!$decoded) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]));
