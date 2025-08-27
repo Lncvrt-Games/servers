@@ -73,7 +73,7 @@ usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
 $clientVersion = $_SERVER['HTTP_CLIENTVERSION'] ?? "0";
-if ($clientVersion == "1.6.1" && $request_type == "1") {
+if (($clientVersion == "1.6.1" && $request_type == "1") || $_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
     echo encrypt(json_encode($limited));
 } else {
     echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
