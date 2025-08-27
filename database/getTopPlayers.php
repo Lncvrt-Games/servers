@@ -22,7 +22,7 @@ if ($request_type === "0") {
         5 => "totalCoinBerries",
         default => "totalNormalBerries"
     };
-} else {
+} else if ($request_type !== "2")  {
     exitWithMessage(json_encode([]));
 }
 
@@ -40,7 +40,7 @@ foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
     if (!$savedata) continue;
 
-    $value = $savedata['gameStore'][$request_value] ?? 0;
+    $value = $request_type != 2 ? ($savedata['gameStore'][$request_value] ?? 0) : ($savedata['bird']['customIcon']['balance'] ?? 0);
     if ($value <= 0) continue;
 
     $customIcon = $savedata['bird']['customIcon']['selected'] ?? null;
@@ -73,7 +73,7 @@ usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
 $clientVersion = $_SERVER['HTTP_CLIENTVERSION'] ?? "0";
-if (($clientVersion == "1.6.1" && $request_type == "1") || $_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
+if ($_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
     echo encrypt(json_encode($limited));
 } else {
     echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
