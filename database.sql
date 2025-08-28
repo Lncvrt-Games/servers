@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 27, 2025 at 10:03 AM
+-- Generation Time: Aug 28, 2025 at 08:21 PM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -99,7 +99,8 @@ CREATE TABLE `users` (
   `register_time` int(11) DEFAULT NULL,
   `banned` tinyint(1) NOT NULL DEFAULT 0,
   `leaderboardsBanned` tinyint(1) NOT NULL DEFAULT 0,
-  `save_data` longtext NOT NULL DEFAULT '\'{}\''
+  `save_data` longtext NOT NULL DEFAULT '\'{}\'',
+  `legacy_high_score` bigint(20) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 --

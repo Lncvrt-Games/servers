@@ -21,8 +21,7 @@ if ($result->num_rows > 0) {
             $login_time = time();
             $uid = $row['id'];
             $username = $row['username'];
-            $savedata = json_decode($row['save_data'], true);
-            $highscore = $savedata['gameStore']['highScore'];
+            $highscore = $row['legacy_high_score'];
             $token = $row['token'];
 
             $stmt = $conn->prepare("UPDATE users SET latest_ip = ? WHERE id = ?");
