@@ -48,6 +48,7 @@ function exitWithMessage($message, $encrypt = true) {
     }
     exit;
 }
+
 function getClientVersion() {
     return $_SERVER['HTTP_CLIENTVERSION'];
 }
