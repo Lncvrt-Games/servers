@@ -1,9 +1,11 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 setPlainHeader();
-if (getClientVersion() == "1.2-beta2") {
-    require __DIR__ . '/backported/1.2-beta2/syncAccount.php';
-    exit;
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (getClientVersion() == "1.2-beta2") {
+        require __DIR__ . '/backported/1.2-beta2/syncAccount.php';
+        exit;
+    }
 }
 checkClientDatabaseVersion();
 
