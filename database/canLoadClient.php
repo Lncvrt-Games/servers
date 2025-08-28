@@ -11,10 +11,10 @@ if (isLatestVersion($clientVersion)) {
     echo "1";
 } else if (isBetaVersion($clientVersion)) {
     echo "4";
-} else if (isAllowedVersion($clientVersion)) {
-    echo "3";
 } else if (isAllowedVersion($clientVersion) && isAllowedDatabaseVersion($clientVersion)) {
     echo "2";
+} else if (isAllowedVersion($clientVersion)) {
+    echo "3";
 } else {
     echo "-1";
 }
