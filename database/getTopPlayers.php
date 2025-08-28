@@ -22,11 +22,11 @@ if ($request_type === "0") {
         5 => "totalCoinBerries",
         default => "totalNormalBerries"
     };
-} else if ($request_type !== "2")  {
+} else if ($request_type !== "2" && $request_type !== "3")  {
     exitWithMessage(json_encode([]));
 }
 
-$stmt = $conn->prepare("SELECT username, id, save_data 
+$stmt = $conn->prepare("SELECT username, id, save_data, legacy_high_score 
   FROM users 
   WHERE banned = 0 AND leaderboardsBanned = 0");
 $stmt->execute();
@@ -40,7 +40,7 @@ foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
     if (!$savedata) continue;
 
-    $value = $request_type != 2 ? ($savedata['gameStore'][$request_value] ?? 0) : ($savedata['bird']['customIcon']['balance'] ?? 0);
+    $value = $request_type != 2 ? $request_type != 3 ? ($savedata['gameStore'][$request_value] ?? 0) : ($row['legacy_high_score'] ?? 0) : ($savedata['bird']['customIcon']['balance'] ?? 0);
     if ($value <= 0) continue;
 
     $customIcon = $savedata['bird']['customIcon']['selected'] ?? null;
