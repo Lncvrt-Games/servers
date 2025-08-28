@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     echo 1;
     $updateStmt->close();
 } else {
-    echo "-2";
+    echo "-3";
 }
 
 $stmt->close();
