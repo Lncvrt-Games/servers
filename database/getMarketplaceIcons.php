@@ -4,13 +4,44 @@ setPlainHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
-$stmt = $conn->prepare("
-    SELECT c.data, u.username, u.id, c.price, c.name, c.uuid, c.state 
-    FROM marketplaceicons c 
-    JOIN users u ON c.userId = u.id 
-    WHERE u.banned = 0 AND c.state = 1 OR c.state = 2 
+$post = getPostData();
+$priceRangeEnabled = (bool)$post['priceRangeEnabled'] ?? false;
+$priceRangeMin = (int)$post['priceRangeMin'] ?? 10;
+$priceRangeMax = (int)$post['priceRangeMax'] ?? 250;
+$searchForEnabled = (bool)$post['searchForEnabled'] ?? false;
+$searchForValue = (string)$post['searchForValue'] ?? '';
+
+$where = ["u.banned = 0", "(c.state = 1 OR c.state = 2)"];
+$params = [];
+$types = "";
+
+if ($priceRangeEnabled) {
+    $where[] = "c.price BETWEEN ? AND ?";
+    $params[] = $priceRangeMin;
+    $params[] = $priceRangeMax;
+    $types .= "ii";
+}
+
+if ($searchForEnabled && $searchForValue !== '') {
+    $where[] = "FROM_BASE64(c.name) LIKE ?";
+    $params[] = "%$searchForValue%";
+    $types .= "s";
+}
+
+$sql = "
+    SELECT c.data, u.username, u.id, c.price, c.name, c.uuid, c.state
+    FROM marketplaceicons c
+    JOIN users u ON c.userId = u.id
+    WHERE " . implode(" AND ", $where) . "
     ORDER BY c.id ASC
-");
+";
+
+$stmt = $conn->prepare($sql);
+
+if (!empty($params)) {
+    $stmt->bind_param($types, ...$params);
+}
+
 $stmt->execute();
 $result = $stmt->get_result();
 
