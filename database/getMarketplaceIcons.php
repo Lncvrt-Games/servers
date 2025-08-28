@@ -5,6 +5,7 @@ checkClientDatabaseVersion();
 $conn = newConnection();
 
 $post = getPostData();
+$sortBy = (int)$post['sortBy'] ?? 2;
 $priceRangeEnabled = (bool)$post['priceRangeEnabled'] ?? false;
 $priceRangeMin = (int)$post['priceRangeMin'] ?? 10;
 $priceRangeMax = (int)$post['priceRangeMax'] ?? 250;
@@ -14,6 +15,12 @@ $searchForValue = (string)$post['searchForValue'] ?? '';
 $where = ["u.banned = 0", "(c.state = 1 OR c.state = 2)"];
 $params = [];
 $types = "";
+$order = match($sortBy) {
+    1 => "ORDER BY c.price ASC",
+    2 => "ORDER BY c.id ASC",
+    3 => "ORDER BY c.id DESC",
+    default => "ORDER BY c.price DESC",
+};
 
 if ($priceRangeEnabled) {
     $where[] = "c.price BETWEEN ? AND ?";
@@ -33,7 +40,7 @@ $sql = "
     FROM marketplaceicons c
     JOIN users u ON c.userId = u.id
     WHERE " . implode(" AND ", $where) . "
-    ORDER BY c.id ASC
+    $order
 ";
 
 $stmt = $conn->prepare($sql);
