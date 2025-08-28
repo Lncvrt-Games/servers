@@ -1,13 +1,9 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+$conn = newConnection();
 
 $request_uid = $_POST['userID'] ?? 0;
 $request_session = $_POST['gameSession'] ?? '';
 $request_score = $_POST['highScore'] ?? 0;
-
-$conn = newConnection();
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE token = ? AND id = ?");
 $stmt->bind_param("ss", $request_session, $request_uid);
