@@ -24,9 +24,11 @@ if ($request_type === "0") {
         3 => "totalUltraBerries",
         4 => "totalSpeedyBerries",
         5 => "totalCoinBerries",
+        6 => "totalRandomBerries",
+        7 => "totalAntiBerries",
         default => "totalNormalBerries"
     };
-} else if ($request_type !== "2" && $request_type !== "3")  {
+} else if ($request_type !== "2" && $request_type !== "3" && $request_type !== "4")  {
     exitWithMessage(json_encode([]));
 }
 
@@ -44,7 +46,13 @@ foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
     if (!$savedata) continue;
 
-    $value = $request_type != 2 ? $request_type != 3 ? ($savedata['gameStore'][$request_value] ?? 0) : ($row['legacy_high_score'] ?? 0) : ($savedata['bird']['customIcon']['balance'] ?? 0);
+    if ($request_type == "4") {
+        $berries = ["totalNormalBerries", "totalPoisonBerries", "totalSlowBerries", "totalUltraBerries", "totalSpeedyBerries", "totalCoinBerries", "totalRandomBerries", "totalAntiBerries"];
+        $value = 0;
+        foreach ($berries as $b) $value += (int)($savedata['gameStore'][$b] ?? 0);
+    } else {
+        $value = $request_type != 2 ? $request_type != 3 ? ($savedata['gameStore'][$request_value] ?? 0) : ($row['legacy_high_score'] ?? 0) : ($savedata['bird']['customIcon']['balance'] ?? 0);
+    }
     if ($value <= 0) continue;
 
     $customIcon = $savedata['bird']['customIcon']['selected'] ?? null;
