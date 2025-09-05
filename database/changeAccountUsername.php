@@ -1,6 +1,12 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 setPlainHeader();
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (getClientVersion() == "1.3-beta1") {
+        require __DIR__ . '/backported/1.3-beta1/changeAccountUsername.php';
+        exit;
+    }
+}
 checkClientDatabaseVersion();
 $conn = newConnection();
 

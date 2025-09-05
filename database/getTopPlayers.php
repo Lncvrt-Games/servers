@@ -1,13 +1,17 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 setPlainHeader();
-if ($_SERVER['HTTP_REQUESTER'] == 'BerryDashLauncher') {
-    $request_type = '0';
-} else {
-    checkClientDatabaseVersion();
-    $post = getPostData();
-    $request_type = $post['type'] ?? '';
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (getClientVersion() == "1.3-beta2") {
+        require __DIR__ . '/backported/1.3-beta2/getTopPlayers.php';
+        exit;
+    }
 }
+if ($_SERVER['HTTP_REQUESTER'] != 'BerryDashLauncher') {
+    checkClientDatabaseVersion();
+}
+$post = getPostData();
+$request_type = $post['type'] ?? '';
 $conn = newConnection();
 
 $request_value = "";

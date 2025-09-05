@@ -14,7 +14,7 @@ if ($result->num_rows > 0) {
     $updateStmt = $conn->prepare("UPDATE users SET legacy_high_score = ? WHERE token = ? AND id = ?");
     $updateStmt->bind_param("isi", $request_score, $request_session, $request_uid);
     $updateStmt->execute();
-    echo 1;
+    echo "1";
     $updateStmt->close();
 } else {
     echo "-3";
