@@ -5,12 +5,15 @@ checkClientDatabaseVersion();
 $conn = newConnection();
 
 $post = getPostData();
+$userId = (int)$post['userId'] ?? 0;
 $sortBy = (int)$post['sortBy'] ?? 2;
-$priceRangeEnabled = (bool)$post['priceRangeEnabled'] ?? false;
+$priceRangeEnabled = isset($post['priceRangeEnabled']) ? (string)$post['priceRangeEnabled'] == 'False' ? false : true : false;
 $priceRangeMin = (int)$post['priceRangeMin'] ?? 10;
 $priceRangeMax = (int)$post['priceRangeMax'] ?? 250;
-$searchForEnabled = (bool)$post['searchForEnabled'] ?? false;
+$searchForEnabled = isset($post['searchForEnabled']) ? (string)$post['searchForEnabled'] == 'False' ? false : true : false;
 $searchForValue = (string)$post['searchForValue'] ?? '';
+$onlyShowEnabled = isset($post['onlyShowEnabled']) ? (string)$post['onlyShowEnabled'] == 'False' ? false : true : false;
+$onlyShowValue = (string)$post['onlyShowValue'] ?? '';
 
 $where = ["u.banned = 0", "(c.state = 1 OR c.state = 2)"];
 $params = [];
@@ -33,6 +36,18 @@ if ($searchForEnabled && $searchForValue !== '') {
     $where[] = "FROM_BASE64(c.name) LIKE ?";
     $params[] = "%$searchForValue%";
     $types .= "s";
+}
+
+if ($onlyShowEnabled) {
+    if ($onlyShowValue === '0') {
+        $where[] = "c.userId = ?";
+        $params[] = $userId;
+        $types .= "i";
+    } elseif ($onlyShowValue === '1') {
+        $where[] = "c.userId != ?";
+        $params[] = $userId;
+        $types .= "i";
+    }
 }
 
 $sql = "
