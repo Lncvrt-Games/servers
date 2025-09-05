@@ -14,6 +14,7 @@ $searchForEnabled = isset($post['searchForEnabled']) ? (string)$post['searchForE
 $searchForValue = (string)$post['searchForValue'] ?? '';
 $onlyShowEnabled = isset($post['onlyShowEnabled']) ? (string)$post['onlyShowEnabled'] == 'False' ? false : true : false;
 $onlyShowValue = (string)$post['onlyShowValue'] ?? '';
+$currentIcons = json_decode(base64_decode((string)($post['currentIcons'] ?? 'W10K')));
 
 $where = ["u.banned = 0", "(c.state = 1 OR c.state = 2)"];
 $params = [];
@@ -47,6 +48,16 @@ if ($onlyShowEnabled) {
         $where[] = "c.userId != ?";
         $params[] = $userId;
         $types .= "i";
+    } elseif ($onlyShowValue === '2') {
+        $placeholders = implode(',', array_fill(0, count($currentIcons), '?'));
+        $where[] = "c.uuid IN ($placeholders)";
+        $params = array_merge($params, $currentIcons);
+        $types .= str_repeat('s', count($currentIcons));
+    } elseif ($onlyShowValue === '3') {
+        $placeholders = implode(',', array_fill(0, count($currentIcons), '?'));
+        $where[] = "c.uuid NOT IN ($placeholders)";
+        $params = array_merge($params, $currentIcons);
+        $types .= str_repeat('s', count($currentIcons));
     }
 }
 
