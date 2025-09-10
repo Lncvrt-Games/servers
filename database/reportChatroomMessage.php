@@ -9,6 +9,10 @@ $reason = $post['reason'] ?? '';
 $token = $post['token'] ?? '';
 $username = $post['username'] ?? '';
 
+if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $reason)) {
+    exitWithMessage(json_encode(["success" => false]));
+}
+
 $conn = newConnection();
 
 $stmt = $conn->prepare("SELECT * FROM users WHERE token = ? AND username = ?");
