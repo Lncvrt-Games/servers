@@ -11,9 +11,10 @@ $stmt = $conn->prepare("
     SELECT p.id, p.content, p.timestamp, p.likes, u.id as userId 
     FROM userposts p 
     JOIN users u ON p.userId = u.id 
-    WHERE u.banned = 0 AND p.deleted_at = 0 
+    WHERE u.id = ? AND p.deleted_at = 0 
     ORDER BY p.id DESC
 ");
+$stmt->bind_param("i", $targetId);
 $stmt->execute();
 $result = $stmt->get_result();
 
