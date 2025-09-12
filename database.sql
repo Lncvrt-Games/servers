@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Aug 28, 2025 at 08:21 PM
+-- Generation Time: Sep 12, 2025 at 07:45 PM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -62,7 +62,8 @@ CREATE TABLE `launcherversions` (
   `releaseDate` bigint(20) NOT NULL,
   `downloadUrls` text NOT NULL,
   `platforms` text NOT NULL,
-  `executables` text NOT NULL
+  `executables` text NOT NULL,
+  `hidden` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 -- --------------------------------------------------------
@@ -82,6 +83,22 @@ CREATE TABLE `marketplaceicons` (
   `price` int(11) NOT NULL DEFAULT 0,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userposts`
+--
+
+CREATE TABLE `userposts` (
+  `id` int(11) NOT NULL,
+  `userId` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `timestamp` int(11) NOT NULL,
+  `likes` bigint(20) NOT NULL DEFAULT 0,
+  `deleted_at` int(11) NOT NULL DEFAULT 0,
+  `votes` text NOT NULL DEFAULT '[]'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -136,6 +153,13 @@ ALTER TABLE `marketplaceicons`
   ADD KEY `fk_userId` (`userId`);
 
 --
+-- Indexes for table `userposts`
+--
+ALTER TABLE `userposts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_userposts_userId` (`userId`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -170,6 +194,12 @@ ALTER TABLE `marketplaceicons`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `userposts`
+--
+ALTER TABLE `userposts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -197,6 +227,12 @@ ALTER TABLE `chats`
 --
 ALTER TABLE `marketplaceicons`
   ADD CONSTRAINT `fk_marketplaceicons_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `userposts`
+--
+ALTER TABLE `userposts`
+  ADD CONSTRAINT `fk_userposts_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

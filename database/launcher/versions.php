@@ -3,7 +3,7 @@ require __DIR__ . '/../../incl/util.php';
 setJsonHeader();
 $conn = newConnection();
 
-$stmt = $conn->prepare("SELECT * FROM launcherversions ORDER BY id DESC");
+$stmt = $conn->prepare("SELECT * FROM launcherversions WHERE hidden = 0 ORDER BY id DESC");
 $stmt->execute();
 
 $result = $stmt->get_result();
