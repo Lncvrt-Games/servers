@@ -21,10 +21,14 @@ function newConnection() {
     return $conn;
 }
 
+function getClientVersion() {
+    return $_SERVER['HTTP_CLIENTVERSION'];
+}
+
 function encrypt($plainText) {
     include __DIR__.'/../config/encryption.php';
     $iv = random_bytes(16);
-    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $SERVER_SEND_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $SERVER_SEND_TRANSFER_KEY_SPECIFIC[getClientVersion()] ?? $SERVER_SEND_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
     return base64_encode($iv . $cipher);
 }
 
@@ -33,7 +37,7 @@ function decrypt($dataB64) {
     $data = base64_decode($dataB64);
     $iv = substr($data, 0, 16);
     $cipher = substr($data, 16);
-    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $SERVER_RECEIVE_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()] ?? $SERVER_RECEIVE_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
     if ($decrypted === false) {
         exit(encrypt('-997'));
     }
@@ -47,10 +51,6 @@ function exitWithMessage($message, $encrypt = true) {
         echo $message;
     }
     exit;
-}
-
-function getClientVersion() {
-    return $_SERVER['HTTP_CLIENTVERSION'];
 }
 
 function isLatestVersion($version) {

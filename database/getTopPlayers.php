@@ -7,6 +7,12 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
+        require __DIR__ . '/backported/1.5/getTopPlayers.php';
+        exit;
+    }
+}
 if ($_SERVER['HTTP_REQUESTER'] != 'BerryDashLauncher') {
     checkClientDatabaseVersion();
 }
