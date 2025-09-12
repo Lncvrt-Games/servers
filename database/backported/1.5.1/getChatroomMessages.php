@@ -5,8 +5,8 @@ $stmt = $conn->prepare("
     SELECT c.id AS chat_id, c.content, u.username, u.id AS user_id, u.save_data 
     FROM chats c
     JOIN users u ON c.userId = u.id
-    WHERE u.banned = 0
-    ORDER BY c.id ASC LIMIT 50
+    WHERE u.banned = 0 AND c.deleted_at = 0 
+    ORDER BY c.id DESC LIMIT 50
 ");
 $stmt->execute();
 $result = $stmt->get_result();
@@ -35,6 +35,6 @@ while ($row = $result->fetch_assoc()) {
     ]);
 }
 
-echo encrypt("1" . ":" . implode("|", $rows));
+echo encrypt("1" . ":" . implode("|", array_reverse($rows)));
 
 $conn->close();

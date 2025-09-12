@@ -1,12 +1,12 @@
 <?php
 require __DIR__ . '/../incl/util.php';
 setPlainHeader();
-if (isAllowedDatabaseVersion(getClientVersion())) {
-    if (getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
+// if (isAllowedDatabaseVersion(getClientVersion())) {
+    // if (getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
         require __DIR__ . '/backported/1.5.1/getChatroomMessages.php';
         exit;
-    }
-}
+    // }
+// }
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -14,7 +14,7 @@ $stmt = $conn->prepare("
     SELECT c.id AS chat_id, c.content, c.deleted_at, u.id AS user_id, u.username, u.save_data
     FROM chats c
     JOIN users u ON c.userId = u.id
-    WHERE u.banned = 0
+    WHERE u.banned = 0 AND c.deleted_at = 0 
     ORDER BY c.id DESC
     LIMIT 50
 ");
