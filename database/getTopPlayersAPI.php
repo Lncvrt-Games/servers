@@ -11,7 +11,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $rows = $result->fetch_all(MYSQLI_ASSOC);
 
-$mapped = [];
+$mapped = new stdClass();
 foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
     if (!$savedata) continue;

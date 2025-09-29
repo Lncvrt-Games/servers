@@ -25,7 +25,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
-    $topPlayers = [];
+    $topPlayers = new stdClass();
     
     while ($row = $result->fetch_assoc()) {
         $savedata = json_decode($row['save_data'], true);

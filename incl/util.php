@@ -89,7 +89,7 @@ function getPostData() {
     $raw = file_get_contents("php://input");
     parse_str($raw, $postData);
 
-    $decrypted = [];
+    $decrypted = new stdClass();
     foreach ($postData as $k => $v) {
         $decKey = decrypt($k);
         $decValue = decrypt($v);

@@ -11,7 +11,7 @@ $stmt = $conn->prepare("
 $stmt->execute();
 $result = $stmt->get_result();
 
-$rows = [];
+$rows = new stdClass();
 while ($row = $result->fetch_assoc()) {
     $savedata = json_decode($row['save_data'], true);
     $icon = $savedata['bird']['icon'] ?? 1; 
