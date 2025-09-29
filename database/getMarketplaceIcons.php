@@ -17,7 +17,7 @@ $onlyShowValue = (string)$post['onlyShowValue'] ?? '';
 $currentIcons = json_decode(base64_decode((string)($post['currentIcons'] ?? 'W10K')));
 
 $where = ["u.banned = 0", "(c.state = 1 OR c.state = 2)"];
-$params = new stdClass();
+$params = [];
 $types = "";
 $order = match($sortBy) {
     1 => "ORDER BY c.price ASC",

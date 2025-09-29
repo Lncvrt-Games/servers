@@ -23,8 +23,8 @@ $stmt->execute();
 $result = $stmt->get_result();
 $rows = $result->fetch_all(MYSQLI_ASSOC);
 
-$mapped = new stdClass();
-$icons = new stdClass();
+$mapped = [];
+$icons = [];
 foreach ($rows as $row) {
     $savedata = json_decode($row['save_data'], true);
 
