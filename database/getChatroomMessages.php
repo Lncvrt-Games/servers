@@ -60,7 +60,7 @@ foreach ($rows as $row) {
 if (getClientVersion() == "1.6") {
     echo encrypt(json_encode($mapped));
 } else {
-    echo encrypt(json_encode(["messages" => array_reverse($mapped), "customIcons" => $icons]));
+    echo encrypt(json_encode(["messages" => array_reverse($mapped), "customIcons" => $icons == [] ? new stdClass() : $icons]));
 }
 
 $conn->close();

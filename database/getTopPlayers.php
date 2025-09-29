@@ -91,7 +91,7 @@ $limited = array_slice($mapped, 0, 500);
 if (getClientVersion() == "1.6" || (getClientVersion() == "1.6.1" && $request_type == "1")) {
     echo encrypt(json_encode($limited));
 } else {
-    echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons]));
+    echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons == [] ? new stdClass() : $icons]));
 }
 
 $conn->close();
