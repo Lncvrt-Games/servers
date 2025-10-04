@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Sep 12, 2025 at 07:45 PM
+-- Generation Time: Oct 04, 2025 at 10:18 PM
 -- Server version: 11.8.3-MariaDB-ubu2404
 -- PHP Version: 8.1.33
 
@@ -52,6 +52,17 @@ CREATE TABLE `chats` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `launchercategories`
+--
+
+CREATE TABLE `launchercategories` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `launcherversions`
 --
 
@@ -63,7 +74,8 @@ CREATE TABLE `launcherversions` (
   `downloadUrls` text NOT NULL,
   `platforms` text NOT NULL,
   `executables` text NOT NULL,
-  `hidden` tinyint(1) NOT NULL DEFAULT 1
+  `hidden` tinyint(1) NOT NULL DEFAULT 1,
+  `category` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
 -- --------------------------------------------------------
@@ -81,6 +93,21 @@ CREATE TABLE `marketplaceicons` (
   `timestamp` bigint(20) NOT NULL,
   `state` tinyint(1) NOT NULL DEFAULT 0,
   `price` int(11) NOT NULL DEFAULT 0,
+  `name` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `presets`
+--
+
+CREATE TABLE `presets` (
+  `id` int(11) NOT NULL,
+  `uuid` text DEFAULT NULL,
+  `userId` int(11) NOT NULL,
+  `data` longtext NOT NULL,
+  `timestamp` bigint(20) NOT NULL,
   `name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=COMPRESSED;
 
@@ -140,15 +167,29 @@ ALTER TABLE `chats`
   ADD KEY `fk_userId` (`userId`);
 
 --
+-- Indexes for table `launchercategories`
+--
+ALTER TABLE `launchercategories`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `launcherversions`
 --
 ALTER TABLE `launcherversions`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_category` (`category`);
 
 --
 -- Indexes for table `marketplaceicons`
 --
 ALTER TABLE `marketplaceicons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_userId` (`userId`);
+
+--
+-- Indexes for table `presets`
+--
+ALTER TABLE `presets`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_userId` (`userId`);
 
@@ -182,6 +223,12 @@ ALTER TABLE `chats`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `launchercategories`
+--
+ALTER TABLE `launchercategories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `launcherversions`
 --
 ALTER TABLE `launcherversions`
@@ -191,6 +238,12 @@ ALTER TABLE `launcherversions`
 -- AUTO_INCREMENT for table `marketplaceicons`
 --
 ALTER TABLE `marketplaceicons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `presets`
+--
+ALTER TABLE `presets`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -223,10 +276,22 @@ ALTER TABLE `chats`
   ADD CONSTRAINT `fk_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `launcherversions`
+--
+ALTER TABLE `launcherversions`
+  ADD CONSTRAINT `fk_category` FOREIGN KEY (`category`) REFERENCES `launchercategories` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `marketplaceicons`
 --
 ALTER TABLE `marketplaceicons`
   ADD CONSTRAINT `fk_marketplaceicons_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `presets`
+--
+ALTER TABLE `presets`
+  ADD CONSTRAINT `fk_presets_userId` FOREIGN KEY (`userId`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `userposts`
