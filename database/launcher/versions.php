@@ -17,7 +17,7 @@ $rows = $result_categories->fetch_all(MYSQLI_ASSOC);
 
 $categories = [];
 foreach ($rows as $row) {
-    $categories[((int)$row['id'])] = $row['name'];
+    $categories[$row['id']] = $row['name'];
 }
 
 echo json_encode(["version" => $versions, "categories" => $categories]);
