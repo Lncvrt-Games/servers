@@ -6,10 +6,13 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         getClientVersion() == "1.2-beta2" ||
         getClientVersion() == "1.2" ||
         getClientVersion() == "1.21" ||
-        getClientVersion() == "1.3-beta1" ||
-        getClientVersion() == "1.3-beta2"
+        getClientVersion() == "1.3-beta1"
     ) {
         require __DIR__ . '/backported/1.2-beta2/loginAccount.php';
+        exit;
+    }
+    if (getClientVersion() == "1.3-beta2" || getClientVersion() == "1.3") {
+        require __DIR__ . '/backported/1.3-beta2/loginAccount.php';
         exit;
     }
     if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {

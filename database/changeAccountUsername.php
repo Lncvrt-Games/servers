@@ -6,6 +6,10 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.3-beta1/changeAccountUsername.php';
         exit;
     }
+    if (getClientVersion() == "1.3-beta2" || getClientVersion() == "1.3") {
+        require __DIR__ . '/backported/1.3-beta2/changeAccountUsername.php';
+        exit;
+    }
 }
 checkClientDatabaseVersion();
 $conn = newConnection();
