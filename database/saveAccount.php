@@ -8,7 +8,8 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         getClientVersion() == "1.21" ||
         getClientVersion() == "1.3-beta1" ||
         getClientVersion() == "1.3-beta2" ||
-        getClientVersion() == "1.3"
+        getClientVersion() == "1.3" ||
+        getClientVersion() == "1.33"
     ) {
         require __DIR__ . '/backported/1.2-beta2/syncAccount.php';
         exit;
