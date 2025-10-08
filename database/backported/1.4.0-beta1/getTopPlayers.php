@@ -31,14 +31,12 @@ if ($result->num_rows > 0) {
         $savedata = json_decode($row['save_data'], true);
         $icon = $savedata['bird']['icon'] ?? 1;
         $overlay = $savedata['bird']['overlay'] ?? 0;
-        $topPlayers[] = $row["username"] . ":" . $row["legacy_high_score"] . ":" . $icon . ":" . $overlay . ":" . $row["id"];
+        $topPlayers[] = base64_encode($row["username"]) . ":" . $row["legacy_high_score"] . ":" . $icon . ":" . $overlay . ":" . $row["id"];
     }
     
-    $output = implode("::", $topPlayers);
-    
-    echo $output;
+    echo implode(";", $topPlayers);
 } else {
-    echo -2;
+    echo "-1";
 }
 
 $conn->close();

@@ -15,6 +15,10 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.3-beta2/loginAccount.php';
         exit;
     }
+    if (getClientVersion() == "1.4.0-beta1") {
+        require __DIR__ . '/backported/1.4.0-beta1/loginAccount.php';
+        exit;
+    }
     if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
         require __DIR__ . '/backported/1.5/loginAccount.php';
         exit;

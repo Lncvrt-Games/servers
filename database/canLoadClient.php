@@ -4,8 +4,11 @@ require __DIR__ . '/../incl/util.php';
 setPlainHeader();
 
 $clientVersion = $_SERVER['HTTP_CLIENTVERSION'] ?? "0";
-if (($_SERVER['HTTP_REQUESTER'] ?? "0") != "BerryDashClient" && ($_SERVER['HTTP_USER_AGENT'] ?? "0") != "BerryDashClient" && ($clientVersion == "1.4.1" || $clientVersion == "1.4.0")) {
+if (($_SERVER['HTTP_REQUESTER'] ?? "0") != "BerryDashClient" && ($_SERVER['HTTP_USER_AGENT'] ?? "0") != "BerryDashClient" && ($clientVersion == "1.4.1" || $clientVersion == "1.4.0" || $clientVersion == "1.4.0-beta1")) {
     exitWithMessage("-1", false);
+}
+if (isAllowedVersion($clientVersion) && $clientVersion == "1.4.0-beta1") {
+    exitWithMessage("1", false);
 }
 if (isLatestVersion($clientVersion)) {
     echo "1";

@@ -14,6 +14,10 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.2-beta2/syncAccount.php';
         exit;
     }
+    if (getClientVersion() == "1.4.0-beta1") {
+        require __DIR__ . '/backported/1.4.0-beta1/saveAccount.php';
+        exit;
+    }
     if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
         require __DIR__ . '/backported/1.5/saveAccount.php';
         exit;
