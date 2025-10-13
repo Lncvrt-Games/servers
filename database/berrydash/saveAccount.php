@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../incl/util.php';
 setPlainHeader();
 if (isAllowedDatabaseVersion(getClientVersion())) {
     if (
@@ -22,13 +22,26 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.5/saveAccount.php';
         exit;
     }
+    if (
+        getClientVersion() == "1.6" ||
+        getClientVersion() == "1.6.1" ||
+        getClientVersion() == "1.6.2" ||
+        getClientVersion() == "1.6.3" ||
+        getClientVersion() == "1.7" ||
+        getClientVersion() == "1.7.1" ||
+        getClientVersion() == "1.8" ||
+        getClientVersion() == "1.8.1" ||
+        getClientVersion() == "1.8.2"
+    ) {
+        require __DIR__ . '/backported/1.6/saveAccount.php';
+        exit;
+    }
 }
 checkClientDatabaseVersion();
 
-$post = getPostData();
-$token = $post['token'] ?? '';
-$username = $post['username'] ?? '';
-$savedata = $post['saveData'] ?? 'e30=';
+$token = $_POST['token'] ?? '';
+$username = $_POST['username'] ?? '';
+$savedata = $_POST['saveData'] ?? 'e30=';
 
 try {
     $savedata = json_decode(base64_decode($savedata), true);
@@ -37,7 +50,7 @@ try {
     $savedata['account']['session'] = null;
     $savedata = json_encode($savedata);
 } catch (Exception $e) {
-    echo encrypt(json_encode(["success" => false, "message" => "Couldn't parse save data"]));
+    echo json_encode(["success" => false, "message" => "Couldn't parse save data"]);
 }
 
 $conn = newConnection();
@@ -52,9 +65,9 @@ if ($result->num_rows > 0) {
     $updateStmt->bind_param("sss", $savedata, $token, $username);
     $updateStmt->execute();
     $updateStmt->close();
-    echo encrypt(json_encode(["success" => true]));
+    echo json_encode(["success" => true]);
 } else {
-    echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+    echo json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]);
 }
 
 $stmt->close();

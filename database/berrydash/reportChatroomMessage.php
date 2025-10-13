@@ -1,16 +1,31 @@
 <?php
-require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../incl/util.php';
 setPlainHeader();
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (
+        getClientVersion() == "1.6" ||
+        getClientVersion() == "1.6.1" ||
+        getClientVersion() == "1.6.2" ||
+        getClientVersion() == "1.6.3" ||
+        getClientVersion() == "1.7" ||
+        getClientVersion() == "1.7.1" ||
+        getClientVersion() == "1.8" ||
+        getClientVersion() == "1.8.1" ||
+        getClientVersion() == "1.8.2"
+    ) {
+        require __DIR__ . '/backported/1.6/reportChatroomMessage.php';
+        exit;
+    }
+}
 checkClientDatabaseVersion();
 
-$post = getPostData();
-$id = $post['id'] ?? '';
-$reason = $post['reason'] ?? '';
-$token = $post['token'] ?? '';
-$username = $post['username'] ?? '';
+$id = $_POST['id'] ?? '';
+$reason = $_POST['reason'] ?? '';
+$token = $_POST['token'] ?? '';
+$username = $_POST['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $reason)) {
-    exitWithMessage(json_encode(["success" => false]));
+    exitWithMessage(json_encode(["success" => false]), false);
 }
 
 $conn = newConnection();

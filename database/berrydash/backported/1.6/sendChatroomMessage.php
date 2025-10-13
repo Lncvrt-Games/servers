@@ -1,14 +1,4 @@
 <?php
-require __DIR__ . '/../incl/util.php';
-setPlainHeader();
-if (isAllowedDatabaseVersion(getClientVersion())) {
-    if (getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
-        require __DIR__ . '/backported/1.5.1/sendChatroomMessage.php';
-        exit;
-    }
-}
-checkClientDatabaseVersion();
-
 $post = getPostData();
 $request_content = $post['content'] ?? '';
 $token = $post['token'] ?? '';

@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../incl/util.php';
 setPlainHeader();
 if (isAllowedDatabaseVersion(getClientVersion())) {
     if (getClientVersion() == "1.4.0-beta1") {
@@ -10,12 +10,25 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.5/loadAccount.php';
         exit;
     }
+    if (
+        getClientVersion() == "1.6" ||
+        getClientVersion() == "1.6.1" ||
+        getClientVersion() == "1.6.2" ||
+        getClientVersion() == "1.6.3" ||
+        getClientVersion() == "1.7" ||
+        getClientVersion() == "1.7.1" ||
+        getClientVersion() == "1.8" ||
+        getClientVersion() == "1.8.1" ||
+        getClientVersion() == "1.8.2"
+    ) {
+        require __DIR__ . '/backported/1.6/loadAccount.php';
+        exit;
+    }
 }
 checkClientDatabaseVersion();
 
-$post = getPostData();
-$token = $post['token'] ?? '';
-$username = $post['username'] ?? '';
+$token = $_POST['token'] ?? '';
+$username = $_POST['username'] ?? '';
 
 $conn = newConnection();
 
@@ -30,12 +43,12 @@ if ($result->num_rows > 0) {
     $savedata['account']['id'] = $row['id'];
     $savedata['account']['name'] = $row['username'];
     $savedata['account']['session'] = $row['token'];
-    echo encrypt(json_encode([
+    echo json_encode([
         "success" => true,
         "data" => $savedata
-    ]));
+    ]);
 } else {
-    echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+    echo json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]);
 }
 
 $stmt->close();

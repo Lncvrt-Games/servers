@@ -1,7 +1,4 @@
 <?php
-require __DIR__ . '/../incl/util.php';
-setPlainHeader();
-checkClientDatabaseVersion();
 $conn = newConnection();
 
 $post = getPostData();

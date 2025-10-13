@@ -1,10 +1,25 @@
 <?php
-require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../incl/util.php';
 setPlainHeader();
+if (isAllowedDatabaseVersion(getClientVersion())) {
+    if (
+        getClientVersion() == "1.6" ||
+        getClientVersion() == "1.6.1" ||
+        getClientVersion() == "1.6.2" ||
+        getClientVersion() == "1.6.3" ||
+        getClientVersion() == "1.7" ||
+        getClientVersion() == "1.7.1" ||
+        getClientVersion() == "1.8" ||
+        getClientVersion() == "1.8.1" ||
+        getClientVersion() == "1.8.2"
+    ) {
+        require __DIR__ . '/backported/1.6/getAccountProfile.php';
+        exit;
+    }
+}
 checkClientDatabaseVersion();
 
-$post = getPostData();
-$uesrId = $post['uesrId'] ?? '';
+$uesrId = $_POST['uesrId'] ?? '';
 
 $conn = newConnection();
 
@@ -26,7 +41,7 @@ if ($result->num_rows > 0) {
             }
         }
     }
-    echo encrypt(json_encode([
+    echo json_encode([
         "success" => true,
         "totalNormalBerries" => $savedata['gameStore']['totalNormalBerries'] ?? 0,
         "totalPoisonBerries" => $savedata['gameStore']['totalPoisonBerries'] ?? 0,
@@ -43,9 +58,9 @@ if ($result->num_rows > 0) {
         "customIcon" => $custom,
         "playerIconColor" => $savedata['settings']['colors']['icon'] ?? [255,255,255],
         "playerOverlayColor" => $savedata['settings']['colors']['overlay'] ?? [255,255,255]
-    ]));
+    ]);
 } else {
-    echo encrypt(json_encode(["success" => false]));
+    echo json_encode(["success" => false]);
 }
 
 $stmt->close();

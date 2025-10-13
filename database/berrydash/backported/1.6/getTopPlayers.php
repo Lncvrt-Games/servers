@@ -1,23 +1,4 @@
 <?php
-require __DIR__ . '/../incl/util.php';
-setPlainHeader();
-if (getClientVersion() == "0" && isAllowedDatabaseVersion("1.4.0-beta1") && isAllowedDatabaseVersion("1.4.0") && isAllowedDatabaseVersion("1.4.1")) {
-    require __DIR__ . '/backported/1.4.0-beta1/getTopPlayers.php';
-    exit;
-}
-if (isAllowedDatabaseVersion(getClientVersion())) {
-    if (getClientVersion() == "1.3-beta2" || getClientVersion() == "1.3" || getClientVersion() == "1.33") {
-        require __DIR__ . '/backported/1.3-beta2/getTopPlayers.php';
-        exit;
-    }
-    if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
-        require __DIR__ . '/backported/1.5/getTopPlayers.php';
-        exit;
-    }
-}
-if ($_SERVER['HTTP_REQUESTER'] != 'BerryDashLauncher') {
-    checkClientDatabaseVersion();
-}
 $post = getPostData();
 $request_type = $post['type'] ?? '';
 $conn = newConnection();

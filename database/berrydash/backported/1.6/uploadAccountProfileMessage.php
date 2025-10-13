@@ -1,8 +1,4 @@
 <?php
-require __DIR__ . '/../incl/util.php';
-setPlainHeader();
-checkClientDatabaseVersion();
-
 $post = getPostData();
 $request_content = $post['content'] ?? '';
 $token = $post['token'] ?? '';
