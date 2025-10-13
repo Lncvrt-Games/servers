@@ -19,38 +19,25 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/berrydash/backported/1.5/registerAccount.php';
         exit;
     }
-    if (
-        getClientVersion() == "1.6" ||
-        getClientVersion() == "1.6.1" ||
-        getClientVersion() == "1.6.2" ||
-        getClientVersion() == "1.6.3" ||
-        getClientVersion() == "1.7" ||
-        getClientVersion() == "1.7.1" ||
-        getClientVersion() == "1.8" ||
-        getClientVersion() == "1.8.1" ||
-        getClientVersion() == "1.8.2"
-    ) {
-        require __DIR__ . '/berrydash/backported/1.6/registerAccount.php';
-        exit;
-    }
 }
 checkClientDatabaseVersion();
 $conn = newConnection();
 
-$username = $_POST['username'] ?? '';
-$password = $_POST['password'] ?? '';
-$email = $_POST['email'] ?? '';
+$post = getPostData();
+$username = $post['username'] ?? '';
+$password = $post['password'] ?? '';
+$email = $post['email'] ?? '';
 
 if (!preg_match('/^[a-zA-Z0-9]{3,16}$/', $username)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Username must be 3-16 characters, letters and numbers only"]), false);
+    exitWithMessage(json_encode(["success" => false, "message" => "Username must be 3-16 characters, letters and numbers only"]));
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Email is invalid"]), false);
+    exitWithMessage(json_encode(["success" => false, "message" => "Email is invalid"]));
 }
 
 if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{8,}$/', $password)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Password must be at least 8 characters with at least one letter and one number"]), false);
+    exitWithMessage(json_encode(["success" => false, "message" => "Password must be at least 8 characters with at least one letter and one number"]));
 }
 
 $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
@@ -59,7 +46,7 @@ $stmt->execute();
 $res = $stmt->get_result();
 
 if ($res->num_rows > 0) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Username or email already taken"]), false);
+    exitWithMessage(json_encode(["success" => false, "message" => "Username or email already taken"]));
 }
 
 $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -74,4 +61,4 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-echo json_encode(["success" => true]);
+echo encrypt(json_encode(["success" => true]));
