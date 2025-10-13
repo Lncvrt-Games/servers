@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../../incl/util.php';
+require __DIR__ . '/../incl/util.php';
 setJsonHeader();
 $conn = newConnection();
 
