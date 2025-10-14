@@ -18,7 +18,7 @@ if ($request_type === "0") {
         default => "totalNormalBerries"
     };
 } else if ($request_type !== "2" && $request_type !== "3" && $request_type !== "4")  {
-    exitWithMessage(json_encode([]));
+    exitWithMessage(jsonEncode([]));
 }
 
 $stmt = $conn->prepare("SELECT username, id, save_data, legacy_high_score 
@@ -74,9 +74,9 @@ usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
 if (getClientVersion() == "1.6" || (getClientVersion() == "1.6.1" && $request_type == "1")) {
-    echo encrypt(json_encode($limited));
+    echo encrypt(jsonEncode($limited));
 } else {
-    echo encrypt(json_encode(["entries" => $limited, "customIcons" => $icons == [] ? new stdClass() : $icons]));
+    echo encrypt(jsonEncode(["entries" => $limited, "customIcons" => $icons == [] ? new stdClass() : $icons]));
 }
 
 $conn->close();

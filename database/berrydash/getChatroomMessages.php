@@ -21,6 +21,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -71,6 +72,6 @@ foreach ($rows as $row) {
 }
 
 
-echo json_encode(["messages" => array_reverse($mapped), "customIcons" => $icons == [] ? new stdClass() : $icons]);
+echo jsonEncode(["messages" => array_reverse($mapped), "customIcons" => $icons == [] ? new stdClass() : $icons], true);
 
 $conn->close();

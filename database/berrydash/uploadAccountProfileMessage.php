@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $request_content = $_POST['content'] ?? '';
@@ -24,7 +25,7 @@ $token = $_POST['token'] ?? '';
 $username = $_POST['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $request_content)) {
-    exitWithMessage(json_encode(["success" => false]), false);
+    exitWithMessage(jsonEncode(["success" => false], true), false);
 }
 
 $conn = newConnection();
@@ -34,7 +35,7 @@ $stmt->bind_param("ss", $token, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-if (!$row) exitWithMessage(json_encode(["success" => false]), false);
+if (!$row) exitWithMessage(jsonEncode(["success" => false], true), false);
 $stmt->close();
 
 $id = $row["id"];
@@ -46,6 +47,6 @@ $stmt->bind_param("isi", $id, $content, $time);
 $stmt->execute();
 $stmt->close();
 
-echo json_encode(["success" => true]);
+echo jsonEncode(["success" => true], true);
 
 $conn->close();

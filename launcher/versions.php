@@ -20,6 +20,6 @@ foreach ($rows as $row) {
     $categories[$row['id']] = $row['name'];
 }
 
-echo json_encode(["versions" => $versions, "categories" => $categories]);
+echo jsonEncode(["versions" => $versions, "categories" => $categories]);
 
 $conn->close();

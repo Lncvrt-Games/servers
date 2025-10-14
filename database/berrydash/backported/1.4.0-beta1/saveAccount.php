@@ -17,7 +17,7 @@ if ($result->num_rows > 0) {
     $savedata = json_decode($row['save_data'], true);
     $savedata['bird']['icon'] = $request_icon;
     $savedata['bird']['overlay'] = $request_overlay;
-    $savedata = json_encode($savedata);
+    $savedata = jsonEncode($savedata);
 
     $updateStmt = $conn->prepare("UPDATE users SET legacy_high_score = ?, save_data = ? WHERE token = ? AND username = ?");
     $updateStmt->bind_param("isss", $request_highScore, $savedata, $request_gameSession, $request_userName);

@@ -9,9 +9,9 @@ try {
     $savedata['account']['id'] = null;
     $savedata['account']['name'] = null;
     $savedata['account']['session'] = null;
-    $savedata = json_encode($savedata);
+    $savedata = jsonEncode($savedata);
 } catch (Exception $e) {
-    echo encrypt(json_encode(["success" => false, "message" => "Couldn't parse save data"]));
+    echo encrypt(jsonEncode(["success" => false, "message" => "Couldn't parse save data"]));
 }
 
 $conn = newConnection();
@@ -26,9 +26,9 @@ if ($result->num_rows > 0) {
     $updateStmt->bind_param("sss", $savedata, $token, $username);
     $updateStmt->execute();
     $updateStmt->close();
-    echo encrypt(json_encode(["success" => true]));
+    echo encrypt(jsonEncode(["success" => true]));
 } else {
-    echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+    echo encrypt(jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
 }
 
 $stmt->close();

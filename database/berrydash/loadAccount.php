@@ -25,6 +25,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $token = $_POST['token'] ?? '';
@@ -43,12 +44,12 @@ if ($result->num_rows > 0) {
     $savedata['account']['id'] = $row['id'];
     $savedata['account']['name'] = $row['username'];
     $savedata['account']['session'] = $row['token'];
-    echo json_encode([
+    echo jsonEncode([
         "success" => true,
         "data" => $savedata
-    ]);
+    ], true);
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]);
+    echo jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"], true);
 }
 
 $stmt->close();

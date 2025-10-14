@@ -11,13 +11,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid username or password"]));
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid username or password"]));
 }
 
 $user = $result->fetch_assoc();
 
 if (!password_verify($password, $user["password"])) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid username or password"]));
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid username or password"]));
 }
 
 $id = $user['id'];
@@ -30,7 +30,7 @@ $stmt->execute();
 
 $data = ["session" => $token, "username" => $user['username'], "userid" => $id];
 
-echo encrypt(json_encode(["success" => true, "data" => $data]));
+echo encrypt(jsonEncode(["success" => true, "data" => $data]));
 
 $stmt->close();
 $conn->close();

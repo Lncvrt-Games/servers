@@ -5,7 +5,7 @@ $token = $post['token'] ?? '';
 $username = $post['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $request_content)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid content recieved"]));
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid content recieved"]));
 }
 
 $conn = newConnection();
@@ -15,7 +15,7 @@ $stmt->bind_param("ss", $token, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-if (!$row) exitWithMessage(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+if (!$row) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
 $stmt->close();
 
 $id = $row["id"];
@@ -27,6 +27,6 @@ $stmt->bind_param("isi", $id, $content, $time);
 $stmt->execute();
 $stmt->close();
 
-echo encrypt(json_encode(["success" => true]));
+echo encrypt(jsonEncode(["success" => true]));
 
 $conn->close();

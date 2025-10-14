@@ -15,6 +15,6 @@ $stmt->bind_param("i", $targetId);
 $stmt->execute();
 $result = $stmt->get_result();
 
-echo encrypt(json_encode(array_map(fn($row) => ['id' => $row['id'], 'userId' => $row['userId'], 'content' => $row['content'], 'timestamp' => genTimestamp($row['timestamp']) . " ago", 'likes' => $row['likes']], $result->fetch_all(MYSQLI_ASSOC))));
+echo encrypt(jsonEncode(array_map(fn($row) => ['id' => $row['id'], 'userId' => $row['userId'], 'content' => $row['content'], 'timestamp' => genTimestamp($row['timestamp']) . " ago", 'likes' => $row['likes']], $result->fetch_all(MYSQLI_ASSOC))));
 
 $conn->close();

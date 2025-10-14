@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -25,7 +26,7 @@ $liked = (int)$_POST['liked'] ?? -1;
 $token = $_POST['token'] ?? '';
 $username = $_POST['username'] ?? '';
 if ($liked !== 0 && $liked !== 1) {
-    echo json_encode(["success" => false, "message" => 'Invalid type']);
+    echo jsonEncode(["success" => false, "message" => 'Invalid type'], true);
     exit;
 }
 
@@ -35,7 +36,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 if (!$row) {
-    echo json_encode(["success" => false, "message" => 'User info not found']);
+    echo jsonEncode(["success" => false, "message" => 'User info not found'], true);
     exit;
 }
 $stmt->close();
@@ -48,7 +49,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 if (!$row) {
-    echo json_encode(["success" => false, "message" => 'Post info not found']);
+    echo jsonEncode(["success" => false, "message" => 'Post info not found'], true);
     exit;
 }
 $stmt->close();
@@ -56,19 +57,19 @@ $stmt->close();
 $votes = json_decode($row["votes"], true) ?? [];
 $likes = (int)$row["likes"];
 if (isset($votes[$user_id])) {
-    echo json_encode(["success" => false, "message" => 'You have already voted']);
+    echo jsonEncode(["success" => false, "message" => 'You have already voted'], true);
     exit;
 }
 
 $votes[$user_id] = $liked === 0 ? false : true;
 $likes += $liked ? 1 : -1;
-$votes = json_encode($votes);
+$votes = jsonEncode($votes);
 
 $stmt = $conn->prepare("UPDATE userposts SET likes = ?, votes = ? WHERE id = ?");
 $stmt->bind_param("isi", $likes, $votes, $targetId);
 $stmt->execute();
 $stmt->close();
 
-echo json_encode(["success" => true, "likes" => $likes]);
+echo jsonEncode(["success" => true, "likes" => $likes], true);
 
 $conn->close();

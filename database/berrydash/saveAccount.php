@@ -37,6 +37,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $token = $_POST['token'] ?? '';
@@ -48,9 +49,9 @@ try {
     $savedata['account']['id'] = null;
     $savedata['account']['name'] = null;
     $savedata['account']['session'] = null;
-    $savedata = json_encode($savedata);
+    $savedata = jsonEncode($savedata);
 } catch (Exception $e) {
-    echo json_encode(["success" => false, "message" => "Couldn't parse save data"]);
+    echo jsonEncode(["success" => false, "message" => "Couldn't parse save data"], true);
 }
 
 $conn = newConnection();
@@ -65,9 +66,9 @@ if ($result->num_rows > 0) {
     $updateStmt->bind_param("sss", $savedata, $token, $username);
     $updateStmt->execute();
     $updateStmt->close();
-    echo json_encode(["success" => true]);
+    echo jsonEncode(["success" => true], true);
 } else {
-    echo json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]);
+    echo jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"], true);
 }
 
 $stmt->close();

@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $uesrId = $_POST['uesrId'] ?? '';
@@ -41,7 +42,7 @@ if ($result->num_rows > 0) {
             }
         }
     }
-    echo json_encode([
+    echo jsonEncode([
         "success" => true,
         "totalNormalBerries" => $savedata['gameStore']['totalNormalBerries'] ?? 0,
         "totalPoisonBerries" => $savedata['gameStore']['totalPoisonBerries'] ?? 0,
@@ -58,9 +59,9 @@ if ($result->num_rows > 0) {
         "customIcon" => $custom,
         "playerIconColor" => $savedata['settings']['colors']['icon'] ?? [255,255,255],
         "playerOverlayColor" => $savedata['settings']['colors']['overlay'] ?? [255,255,255]
-    ]);
+    ], true);
 } else {
-    echo json_encode(["success" => false]);
+    echo jsonEncode(["success" => false], true);
 }
 
 $stmt->close();

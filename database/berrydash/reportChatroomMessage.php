@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $id = $_POST['id'] ?? '';
@@ -25,7 +26,7 @@ $token = $_POST['token'] ?? '';
 $username = $_POST['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $reason)) {
-    exitWithMessage(json_encode(["success" => false]), false);
+    exitWithMessage(jsonEncode(["success" => false], true), false);
 }
 
 $conn = newConnection();

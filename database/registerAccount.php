@@ -34,6 +34,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -42,15 +43,15 @@ $password = $_POST['password'] ?? '';
 $email = $_POST['email'] ?? '';
 
 if (!preg_match('/^[a-zA-Z0-9]{3,16}$/', $username)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Username must be 3-16 characters, letters and numbers only"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Username must be 3-16 characters, letters and numbers only"], true), false);
 }
 
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Email is invalid"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Email is invalid"], true), false);
 }
 
 if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_\-+=]{8,}$/', $password)) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Password must be at least 8 characters with at least one letter and one number"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Password must be at least 8 characters with at least one letter and one number"], true), false);
 }
 
 $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
@@ -59,7 +60,7 @@ $stmt->execute();
 $res = $stmt->get_result();
 
 if ($res->num_rows > 0) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Username or email already taken"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Username or email already taken"], true), false);
 }
 
 $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -74,4 +75,4 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-echo json_encode(["success" => true]);
+echo jsonEncode(["success" => true], true);

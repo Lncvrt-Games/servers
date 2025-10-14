@@ -28,7 +28,7 @@ if ($result->num_rows > 0) {
     $savedata['bird']['overlay'] = $overlay;
     $savedata['settings']['colors']['icon'] = $birdColor;
     $savedata['settings']['colors']['overlay'] = $overlayColor;
-    $savedata = json_encode($savedata);
+    $savedata = jsonEncode($savedata);
     $updateStmt = $conn->prepare("UPDATE users SET legacy_high_score = ?, save_data = ? WHERE token = ? AND username = ?");
     $updateStmt->bind_param("isss", 
         $highScore, 

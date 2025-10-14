@@ -16,12 +16,12 @@ if ($result->num_rows > 0) {
     $savedata['account']['id'] = $row['id'];
     $savedata['account']['name'] = $row['username'];
     $savedata['account']['session'] = $row['token'];
-    echo encrypt(json_encode([
+    echo encrypt(jsonEncode([
         "success" => true,
         "data" => $savedata
     ]));
 } else {
-    echo encrypt(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
+    echo encrypt(jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"]));
 }
 
 $stmt->close();

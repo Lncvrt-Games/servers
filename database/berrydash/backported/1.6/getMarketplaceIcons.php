@@ -75,6 +75,6 @@ if (!empty($params)) {
 $stmt->execute();
 $result = $stmt->get_result();
 
-echo encrypt(json_encode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'data' => $row['data'], 'uuid' => $row['uuid'], 'price' => (int)$row['state'] == 2 ? 100000000 : $row['price'], 'name' => base64_decode($row['name'])], $result->fetch_all(MYSQLI_ASSOC))));
+echo encrypt(jsonEncode(array_map(fn($row) => ['username' => $row['username'], 'userid' => $row['id'], 'data' => $row['data'], 'uuid' => $row['uuid'], 'price' => (int)$row['state'] == 2 ? 100000000 : $row['price'], 'name' => base64_decode($row['name'])], $result->fetch_all(MYSQLI_ASSOC))));
 
 $conn->close();

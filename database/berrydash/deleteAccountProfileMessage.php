@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -30,7 +31,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 if (!$row) {
-    echo json_encode(["success" => false, "message" => 'User info not found']);
+    echo jsonEncode(["success" => false, "message" => 'User info not found'], true);
     exit;
 }
 $stmt->close();
@@ -45,6 +46,6 @@ $stmt->execute();
 $success = $stmt->affected_rows > 0;
 $stmt->close();
 
-echo json_encode(["success" => $success]);
+echo jsonEncode(["success" => $success], true);
 
 $conn->close();

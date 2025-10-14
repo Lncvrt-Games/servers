@@ -17,6 +17,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 
 $token = $_POST['token'] ?? '';
@@ -26,16 +27,16 @@ $name = $_POST['name'] ?? '';
 $name = base64_encode($name);
 $filecontent = $_POST['filecontent'] ?? '';
 
-if ($price < 10) exitWithMessage(json_encode(["success" => false, "message" => "Price cannot be be under 10 coins"]), true);
-if (!preg_match('/^[a-zA-Z0-9 ]+$/', base64_decode($name))) exitWithMessage(json_encode(["success" => false, "message" => "Name is invalid"]), true);
-if (!$filecontent) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]), true);
+if ($price < 10) exitWithMessage(jsonEncode(["success" => false, "message" => "Price cannot be be under 10 coins"], true), true);
+if (!preg_match('/^[a-zA-Z0-9 ]+$/', base64_decode($name))) exitWithMessage(jsonEncode(["success" => false, "message" => "Name is invalid"], true), true);
+if (!$filecontent) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid image uploaded"], true), true);
 $decoded = base64_decode($filecontent, true);
-if (!$decoded) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]), true);
-if (strlen($decoded) > 1024 * 1024) exitWithMessage(json_encode(["success" => false, "message" => "File size exceeds 1 MB limit"]), true);
+if (!$decoded) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid image uploaded"], true), true);
+if (strlen($decoded) > 1024 * 1024) exitWithMessage(jsonEncode(["success" => false, "message" => "File size exceeds 1 MB limit"], true), true);
 $info = getimagesizefromstring($decoded);
-if (!$info) exitWithMessage(json_encode(["success" => false, "message" => "Invalid image uploaded"]), true);
-if ($info[2] !== IMAGETYPE_PNG) exitWithMessage(json_encode(["success" => false, "message" => "Image must be a PNG"]), true);
-if ($info[0] !== 128 || $info[1] !== 128) exitWithMessage(json_encode(["success" => false, "message" => "Invalid has to be 128x128"]), true);
+if (!$info) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid image uploaded"], true), true);
+if ($info[2] !== IMAGETYPE_PNG) exitWithMessage(jsonEncode(["success" => false, "message" => "Image must be a PNG"], true), true);
+if ($info[0] !== 128 || $info[1] !== 128) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid has to be 128x128"], true), true);
 
 $conn = newConnection();
 
@@ -44,7 +45,7 @@ $stmt->bind_param("ss", $token, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-if (!$row) exitWithMessage(json_encode(["success" => false, "message" => "Invalid session token or username, please refresh login"]), true);
+if (!$row) exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid session token or username, please refresh login"], true), true);
 $stmt->close();
 
 $id = $row["id"];
@@ -57,7 +58,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 if ($result->fetch_assoc()) {
     $stmt->close();
-    exitWithMessage(json_encode(["success" => false, "message" => "This icon already exists in the marketplace"]), true);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "This icon already exists in the marketplace"], true), true);
 }
 $stmt->close();
 
@@ -69,6 +70,6 @@ $stmt->execute();
 $insertId = $conn->insert_id;
 $stmt->close();
 
-echo json_encode(["success" => true, "message" => "Icon uploaded successfully! It will be reviewed and accepted or denied soon"]);
+echo jsonEncode(["success" => true, "message" => "Icon uploaded successfully! It will be reviewed and accepted or denied soon"], true);
 
 $conn->close();

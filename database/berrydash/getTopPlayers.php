@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../../incl/util.php';
-setPlainHeader();
+setJsonHeader();
 if (getClientVersion() == "0" && isAllowedDatabaseVersion("1.4.0-beta1") && isAllowedDatabaseVersion("1.4.0") && isAllowedDatabaseVersion("1.4.1")) {
     require __DIR__ . '/backported/1.4.0-beta1/getTopPlayers.php';
     exit;
@@ -48,7 +48,7 @@ if ($request_type === "0") {
         default => "totalNormalBerries"
     };
 } else if ($request_type !== "2" && $request_type !== "3" && $request_type !== "4")  {
-    exitWithMessage(json_encode([]), false);
+    exitWithMessage(jsonEncode([]), false);
 }
 
 $stmt = $conn->prepare("SELECT username, id, save_data, legacy_high_score 
@@ -104,9 +104,9 @@ usort($mapped, fn($a,$b) => $b['value'] <=> $a['value']);
 $limited = array_slice($mapped, 0, 500);
 
 if (getClientVersion() == "1.6" || (getClientVersion() == "1.6.1" && $request_type == "1")) {
-    echo json_encode($limited);
+    echo jsonEncode($limited, true);
 } else {
-    echo json_encode(["entries" => $limited, "customIcons" => $icons == [] ? new stdClass() : $icons]);
+    echo jsonEncode(["entries" => $limited, "customIcons" => $icons == [] ? new stdClass() : $icons], true);
 }
 
 $conn->close();

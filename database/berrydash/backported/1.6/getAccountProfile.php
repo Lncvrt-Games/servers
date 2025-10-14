@@ -22,7 +22,7 @@ if ($result->num_rows > 0) {
             }
         }
     }
-    echo encrypt(json_encode([
+    echo encrypt(jsonEncode([
         "success" => true,
         "totalNormalBerries" => $savedata['gameStore']['totalNormalBerries'] ?? 0,
         "totalPoisonBerries" => $savedata['gameStore']['totalPoisonBerries'] ?? 0,
@@ -41,7 +41,7 @@ if ($result->num_rows > 0) {
         "playerOverlayColor" => $savedata['settings']['colors']['overlay'] ?? [255,255,255]
     ]));
 } else {
-    echo encrypt(json_encode(["success" => false]));
+    echo encrypt(jsonEncode(["success" => false]));
 }
 
 $stmt->close();

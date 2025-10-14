@@ -27,17 +27,21 @@ function getClientVersion() {
 
 function encrypt($plainText) {
     include __DIR__.'/../config/encryption.php';
+    $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
+    if ($key == null) return;
     $iv = random_bytes(16);
-    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $SERVER_SEND_TRANSFER_KEY_SPECIFIC[getClientVersion()] ?? $SERVER_SEND_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
     return base64_encode($iv . $cipher);
 }
 
 function decrypt($dataB64) {
     include __DIR__.'/../config/encryption.php';
+    $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
+    if ($key == null) return;
     $data = base64_decode($dataB64);
     $iv = substr($data, 0, 16);
     $cipher = substr($data, 16);
-    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()] ?? $SERVER_RECEIVE_TRANSFER_KEY, OPENSSL_RAW_DATA, $iv);
+    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
     if ($decrypted === false) {
         exit(encrypt('-997'));
     }
@@ -114,4 +118,9 @@ function genTimestamp($time) {
         $numberOfUnits = floor($time / $unit);
         return $numberOfUnits . ' ' . $text . (($numberOfUnits > 1) ? 's' : '');
     }
+}
+
+function jsonEncode($data, $format = false)
+{
+    return jsonEncode($data, $format ? JSON_PRETTY_PRINT : 0);
 }

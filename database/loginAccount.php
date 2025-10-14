@@ -38,6 +38,7 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         exit;
     }
 }
+setJsonHeader();
 checkClientDatabaseVersion();
 $conn = newConnection();
 
@@ -50,13 +51,13 @@ $stmt->execute();
 $result = $stmt->get_result();
 
 if ($result->num_rows === 0) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid username or password"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid username or password"], true), false);
 }
 
 $user = $result->fetch_assoc();
 
 if (!password_verify($password, $user["password"])) {
-    exitWithMessage(json_encode(["success" => false, "message" => "Invalid username or password"]), false);
+    exitWithMessage(jsonEncode(["success" => false, "message" => "Invalid username or password"], true), false);
 }
 
 $id = $user['id'];
@@ -69,7 +70,7 @@ $stmt->execute();
 
 $data = ["session" => $token, "username" => $user['username'], "userid" => $id];
 
-echo json_encode(["success" => true, "data" => $data]);
+echo jsonEncode(["success" => true, "data" => $data], true);
 
 $stmt->close();
 $conn->close();
