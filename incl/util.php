@@ -28,7 +28,7 @@ function getClientVersion() {
 function encrypt($plainText) {
     include __DIR__.'/../config/encryption.php';
     $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
-    if ($key == null) return;
+    if ($key == null) $plainText;
     $iv = random_bytes(16);
     $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
     return base64_encode($iv . $cipher);
@@ -37,7 +37,7 @@ function encrypt($plainText) {
 function decrypt($dataB64) {
     include __DIR__.'/../config/encryption.php';
     $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
-    if ($key == null) return;
+    if ($key == null) $dataB64;
     $data = base64_decode($dataB64);
     $iv = substr($data, 0, 16);
     $cipher = substr($data, 16);
@@ -84,9 +84,9 @@ function isAllowedDatabaseVersion($version) {
 function checkClientDatabaseVersion() {
     global $allowedDatabaseVersions;
     if (!isset($allowedDatabaseVersions)) require __DIR__ . '/../config/general.php';
-    if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998", false);
-    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998", false);
-    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions)) exitWithMessage("-998", false);
+    if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998");
+    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998");
+    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions)) exitWithMessage("-998");
 }
 
 function getPostData() {
