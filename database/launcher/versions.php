@@ -1,5 +1,5 @@
 <?php
-require __DIR__ . '/../incl/util.php';
+require __DIR__ . '/../../incl/util.php';
 setJsonHeader();
 $conn = newConnection();
 
@@ -20,6 +20,6 @@ foreach ($rows as $row) {
     $categories[$row['id']] = $row['name'];
 }
 
-echo jsonEncode(["versions" => $versions, "categories" => $categories]);
+echo jsonEncode(["versions" => $versions, "categories" => $categories], true);
 
 $conn->close();
