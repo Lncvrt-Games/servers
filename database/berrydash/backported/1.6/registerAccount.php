@@ -1,26 +1,4 @@
 <?php
-require __DIR__ . '/../incl/util.php';
-setPlainHeader();
-if (isAllowedDatabaseVersion(getClientVersion())) {
-    if (getClientVersion() == "1.2-beta2" || getClientVersion() == "1.2") {
-        require __DIR__ . '/berrydash/backported/1.2-beta2/registerAccount.php';
-        exit;
-    }
-    if (
-        getClientVersion() == "1.21" ||
-        getClientVersion() == "1.3-beta1" ||
-        getClientVersion() == "1.3-beta2" ||
-        getClientVersion() == "1.3"
-    ) {
-        require __DIR__ . '/berrydash/backported/1.21/registerAccount.php';
-        exit;
-    }
-    if (getClientVersion() == "1.5.0" || getClientVersion() == "1.5.1" || getClientVersion() == "1.5.2") {
-        require __DIR__ . '/berrydash/backported/1.5/registerAccount.php';
-        exit;
-    }
-}
-checkClientDatabaseVersion();
 $conn = newConnection();
 
 $post = getPostData();
