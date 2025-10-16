@@ -27,7 +27,7 @@ function getClientVersion() {
 
 function encrypt($plainText) {
     include __DIR__.'/../config/encryption.php';
-    $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
+    $key = $SERVER_SEND_TRANSFER_KEY_SPECIFIC[getClientVersion()];
     if ($key == null) return;
     $iv = random_bytes(16);
     $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
