@@ -1,6 +1,6 @@
 <?php
 require __DIR__ . '/../../incl/util.php';
-setJsonHeader();
+setPlainHeader();
 if (getClientVersion() == "0" && isAllowedDatabaseVersion("1.4.0-beta1") && isAllowedDatabaseVersion("1.4.0") && isAllowedDatabaseVersion("1.4.1")) {
     require __DIR__ . '/backported/1.4.0-beta1/getTopPlayers.php';
     exit;
@@ -28,6 +28,10 @@ if (isAllowedDatabaseVersion(getClientVersion())) {
         require __DIR__ . '/backported/1.6/getTopPlayers.php';
         exit;
     }
+}
+setJsonHeader();
+if (getClientVersion() != "1.1.1" && $_SERVER['HTTP_REQUESTER'] != "BerryDashLauncher") {
+    checkClientDatabaseVersion();
 }
 
 $request_type = $_POST['type'] ?? '';
