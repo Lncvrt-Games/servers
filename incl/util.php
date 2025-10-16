@@ -122,5 +122,5 @@ function genTimestamp($time) {
 
 function jsonEncode($data, $format = false)
 {
-    return jsonEncode($data, $format ? JSON_PRETTY_PRINT : 0);
+    return json_encode($data, $format ? JSON_PRETTY_PRINT : 0);
 }
