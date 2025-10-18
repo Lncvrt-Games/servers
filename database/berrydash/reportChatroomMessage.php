@@ -9,7 +9,7 @@ $token = $_POST['token'] ?? '';
 $username = $_POST['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $reason)) {
-    exitWithMessage(jsonEncode(["success" => false], true), false);
+    exitWithMessage(jsonEncode(["success" => false], true));
 }
 
 $conn = newConnection();

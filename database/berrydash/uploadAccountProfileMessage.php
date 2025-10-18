@@ -8,7 +8,7 @@ $token = $_POST['token'] ?? '';
 $username = $_POST['username'] ?? '';
 
 if (!preg_match('/^[ a-zA-Z0-9!@#\$%\^&\*\(\)_\+\-=\[\]\{\};\':",\.<>\/\?\\\\|`~]+$/', $request_content)) {
-    exitWithMessage(jsonEncode(["success" => false], true), false);
+    exitWithMessage(jsonEncode(["success" => false], true));
 }
 
 $conn = newConnection();
@@ -18,7 +18,7 @@ $stmt->bind_param("ss", $token, $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
-if (!$row) exitWithMessage(jsonEncode(["success" => false], true), false);
+if (!$row) exitWithMessage(jsonEncode(["success" => false], true));
 $stmt->close();
 
 $id = $row["id"];

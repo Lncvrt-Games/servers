@@ -25,35 +25,8 @@ function getClientVersion() {
     return $_SERVER['HTTP_CLIENTVERSION'];
 }
 
-function encrypt($plainText) {
-    include __DIR__.'/../config/encryption.php';
-    $key = $SERVER_SEND_TRANSFER_KEY_SPECIFIC[getClientVersion()];
-    if ($key == null) return;
-    $iv = random_bytes(16);
-    $cipher = openssl_encrypt($plainText, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-    return base64_encode($iv . $cipher);
-}
-
-function decrypt($dataB64) {
-    include __DIR__.'/../config/encryption.php';
-    $key = $SERVER_RECEIVE_TRANSFER_KEY_SPECIFIC[getClientVersion()];
-    if ($key == null) return;
-    $data = base64_decode($dataB64);
-    $iv = substr($data, 0, 16);
-    $cipher = substr($data, 16);
-    $decrypted = openssl_decrypt($cipher, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
-    if ($decrypted === false) {
-        exit(encrypt('-997'));
-    }
-    return $decrypted;
-}
-
-function exitWithMessage($message, $encrypt = true) {
-    if ($encrypt === true) {
-        echo encrypt($message);
-    } else {
-        echo $message;
-    }
+function exitWithMessage($message) {
+    echo $message;
     exit;
 }
 
@@ -84,22 +57,9 @@ function isAllowedDatabaseVersion($version) {
 function checkClientDatabaseVersion() {
     global $allowedDatabaseVersions;
     if (!isset($allowedDatabaseVersions)) require __DIR__ . '/../config/general.php';
-    if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998", false);
-    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998", false);
-    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions)) exitWithMessage("-998", false);
-}
-
-function getPostData() {
-    $raw = file_get_contents("php://input");
-    parse_str($raw, $postData);
-
-    $decrypted = [];
-    foreach ($postData as $k => $v) {
-        $decKey = decrypt($k);
-        $decValue = decrypt($v);
-        $decrypted[$decKey] = $decValue;
-    }
-    return $decrypted;
+    if (!isset($_SERVER['HTTP_REQUESTER'])) exitWithMessage("-998");
+    if ($_SERVER['HTTP_REQUESTER'] != "BerryDashClient") exitWithMessage("-998");
+    if (!in_array($_SERVER['HTTP_CLIENTVERSION'] ?? '', $allowedDatabaseVersions)) exitWithMessage("-998");
 }
 
 function uuidv4() {

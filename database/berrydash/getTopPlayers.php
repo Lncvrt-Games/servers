@@ -23,7 +23,7 @@ if ($request_type === "0") {
         default => "totalNormalBerries"
     };
 } else if ($request_type !== "2" && $request_type !== "3" && $request_type !== "4")  {
-    exitWithMessage(jsonEncode([]), false);
+    exitWithMessage(jsonEncode([]));
 }
 
 $stmt = $conn->prepare("SELECT username, id, save_data, legacy_high_score 
